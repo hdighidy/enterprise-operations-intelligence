@@ -30,6 +30,10 @@ from src.data.generators.project_generator import (
     generate_projects,
 )
 
+from src.data.generators.activity_generator import (
+    generate_project_activities,
+)
+
 
 def main() -> None:
 
@@ -63,6 +67,16 @@ def main() -> None:
     ].tolist(),
     )
 
+
+    print("Generating project activities...")
+
+    project_activities = (
+       generate_project_activities(
+           projects=projects,
+           seed=42,
+       )
+    )
+
     print("Generating equipment...")
     equipment = generate_equipment(
         n=NUM_EQUIPMENT
@@ -88,6 +102,11 @@ def main() -> None:
         index=False,
     )
 
+    project_activities.to_csv(
+         RAW_DATA_DIR / "project_activities.csv",
+        index=False,
+    )
+
     equipment.to_csv(
         RAW_DATA_DIR / "equipment.csv",
         index=False,
@@ -100,6 +119,7 @@ def main() -> None:
     print(f"Employees:  {len(employees):,}")
     print(f"Equipment:  {len(equipment):,}")
     print(f"Projects:   {len(projects):,}")
+    print(f"Activities: {len(project_activities):,}")
 
     print(
         f"\nFiles generated in:\n{RAW_DATA_DIR}"
