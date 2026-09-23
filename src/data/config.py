@@ -30,6 +30,7 @@ NUM_MATERIALS = 250
 NUM_SUPPLIERS = 350
 NUM_EMPLOYEES = 2_000
 NUM_EQUIPMENT = 1_000
+NUM_PROJECTS = 150
 
 
 # ============================================================
