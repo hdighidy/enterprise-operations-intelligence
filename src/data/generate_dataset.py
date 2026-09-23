@@ -4,6 +4,7 @@ from src.data.config import (
     NUM_EMPLOYEES,
     NUM_EQUIPMENT,
     NUM_MATERIALS,
+    NUM_PROJECTS,
     NUM_SUPPLIERS,
     RAW_DATA_DIR,
     create_directories,
@@ -23,6 +24,10 @@ from src.data.generators.material_generator import (
 
 from src.data.generators.supplier_generator import (
     generate_suppliers,
+)
+
+from src.data.generators.project_generator import (
+    generate_projects,
 )
 
 
@@ -50,6 +55,14 @@ def main() -> None:
         n=NUM_EMPLOYEES
     )
 
+    print("Generating projects...")
+    projects = generate_projects(
+    n=NUM_PROJECTS,
+    employee_ids=employees[
+        "employee_id"
+    ].tolist(),
+    )
+
     print("Generating equipment...")
     equipment = generate_equipment(
         n=NUM_EQUIPMENT
@@ -70,6 +83,11 @@ def main() -> None:
         index=False,
     )
 
+    projects.to_csv(
+        RAW_DATA_DIR / "projects.csv",
+        index=False,
+    )
+
     equipment.to_csv(
         RAW_DATA_DIR / "equipment.csv",
         index=False,
@@ -81,6 +99,7 @@ def main() -> None:
     print(f"Suppliers:  {len(suppliers):,}")
     print(f"Employees:  {len(employees):,}")
     print(f"Equipment:  {len(equipment):,}")
+    print(f"Projects:   {len(projects):,}")
 
     print(
         f"\nFiles generated in:\n{RAW_DATA_DIR}"
