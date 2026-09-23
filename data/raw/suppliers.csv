@@ -1,0 +1,351 @@
+supplier_id,supplier_name,supplier_category,location,supplier_rating,capacity,payment_terms_days,reliability_score
+SUP-0001,"Rodriguez, Figueroa and Sanchez",HVAC,Lake Curtis,4.0,4428,60,0.7508
+SUP-0002,"Mcclain, Miller and Henderson",Plumbing,North Jefferyhaven,4.32,19524,45,0.8299
+SUP-0003,"Johnson, Gonzalez and Santos",Electrical,Robinsonshire,3.95,9283,30,0.7366
+SUP-0004,Pacheco-Smith,Civil,Lake Roberto,4.07,11314,45,0.768
+SUP-0005,Moore-Bernard,Fire Fighting,Curtisfurt,4.63,7596,45,0.908
+SUP-0006,Howard LLC,HVAC,Lindsaymouth,4.56,1354,45,0.8906
+SUP-0007,"Martinez, Nielsen and Miller",Civil,Mariastad,4.73,11507,90,0.9335
+SUP-0008,"Lee, Jones and Stanley",General Materials,Traciebury,4.29,9024,45,0.8237
+SUP-0009,James Group,Civil,Franciscostad,4.17,16038,90,0.7926
+SUP-0010,Santiago Ltd,HVAC,New Cynthiaside,4.17,13464,30,0.7918
+SUP-0011,"Sanchez, Ford and Nelson",Civil,Lake Mark,4.18,2044,60,0.7946
+SUP-0012,Perez Inc,Fire Fighting,Richardland,4.05,12877,45,0.7634
+SUP-0013,Gentry PLC,HVAC,Jasonfort,4.81,16522,90,0.9535
+SUP-0014,Wilkerson-Day,General Materials,West Donald,4.49,5986,60,0.873
+SUP-0015,"Hoffman, Baker and Richards",HVAC,Coxberg,4.51,2569,90,0.8781
+SUP-0016,"Snyder, Campos and Callahan",Fire Fighting,Lake Ernest,4.38,14586,60,0.8439
+SUP-0017,"Henderson, Brown and James",Fire Fighting,Riceside,4.57,12340,90,0.8913
+SUP-0018,Frazier Inc,Fire Fighting,Kaylamouth,3.68,2209,45,0.6706
+SUP-0019,Carter and Sons,Electrical,Smithview,4.23,14869,30,0.8083
+SUP-0020,"Gill, Romero and Rodriguez",Civil,Meaganhaven,4.84,2379,60,0.9598
+SUP-0021,"Gonzalez, Brooks and Martin",Fire Fighting,New Mariotown,4.11,13434,45,0.777
+SUP-0022,Hickman LLC,Civil,North John,4.81,12732,30,0.9515
+SUP-0023,"Arroyo, Miller and Tucker",Plumbing,Port Amandaberg,4.39,3916,90,0.8476
+SUP-0024,Keller PLC,Electrical,West Allison,4.69,3826,30,0.9234
+SUP-0025,"Henderson, Lewis and Ryan",Fire Fighting,Lake Larry,3.68,5879,60,0.6699
+SUP-0026,"Santos, Kim and Holmes",General Materials,East Jeffreymouth,4.93,10068,45,0.9832
+SUP-0027,Chapman and Sons,General Materials,North Chad,4.26,693,60,0.8151
+SUP-0028,"Brown, Jones and Johnson",Electrical,Chadbury,4.29,3234,60,0.8219
+SUP-0029,Caldwell-Lewis,Electrical,Lake Selena,4.23,19515,30,0.8064
+SUP-0030,"Johnston, Sanchez and Kennedy",General Materials,Leeville,4.51,1229,45,0.8773
+SUP-0031,"Jordan, Henderson and Owens",General Materials,Lake Deniseville,4.51,19831,30,0.8775
+SUP-0032,Powell LLC,HVAC,East Jamesside,4.71,3709,60,0.9281
+SUP-0033,Taylor-White,Civil,Wrightland,4.19,931,45,0.7973
+SUP-0034,Morton-Chase,HVAC,North Deniseside,3.84,13402,90,0.7108
+SUP-0035,Novak and Sons,Electrical,South Todd,2.88,15061,45,0.4705
+SUP-0036,Hancock Inc,Fire Fighting,South Aaron,3.62,12187,60,0.6538
+SUP-0037,Baker-Bowers,Civil,Mitchellside,3.52,850,90,0.631
+SUP-0038,"Higgins, Moore and Phillips",General Materials,New Jillton,4.73,2875,90,0.9335
+SUP-0039,"Edwards, Williams and Woods",General Materials,North Susan,4.44,11562,30,0.8601
+SUP-0040,York Inc,Plumbing,Lake Michellefurt,3.94,8252,45,0.734
+SUP-0041,David PLC,HVAC,New Brooke,3.99,16895,60,0.7468
+SUP-0042,"Miller, Sandoval and Cunningham",Civil,Sarahborough,3.42,3236,90,0.6039
+SUP-0043,"Moran, Allen and Foster",Civil,Stephenland,3.68,6114,45,0.6703
+SUP-0044,Ellis PLC,Civil,North Amandahaven,4.32,16037,60,0.8307
+SUP-0045,Anderson-Bailey,General Materials,East Mikeburgh,3.55,19270,45,0.6374
+SUP-0046,Bass-Warner,General Materials,Lake Lisaport,4.84,9350,30,0.9612
+SUP-0047,"Garcia, Humphrey and Baker",Electrical,Lake Angelaview,3.77,6715,90,0.6935
+SUP-0048,Jacobs-Robbins,Fire Fighting,Lake Cynthia,4.56,3305,30,0.891
+SUP-0049,Wagner-King,Plumbing,North Cynthiaview,4.12,8870,60,0.7797
+SUP-0050,Smith and Sons,Civil,Evanmouth,4.29,13773,90,0.8236
+SUP-0051,"Thornton, Hoffman and Rodriguez",Plumbing,New Barry,3.0,13030,90,0.4999
+SUP-0052,Aguilar-Hernandez,HVAC,North Kyle,3.96,8617,90,0.7391
+SUP-0053,Nolan and Sons,General Materials,Lake Curtis,4.87,16113,30,0.9682
+SUP-0054,"Henson, Russell and Oliver",Civil,East Michelle,4.15,19601,30,0.7876
+SUP-0055,Keith Inc,Fire Fighting,Lake Sandra,3.46,15790,60,0.6148
+SUP-0056,Pham-Shields,Plumbing,West Erik,4.88,12971,30,0.9691
+SUP-0057,"Rodriguez, Brennan and Garrison",Civil,East Lisa,4.06,4066,30,0.7649
+SUP-0058,Bailey-Hoover,Fire Fighting,East Andrew,3.8,6289,60,0.7012
+SUP-0059,Ross LLC,Plumbing,Port Joshuahaven,4.28,15442,30,0.82
+SUP-0060,Frazier-Anthony,General Materials,Sheilaville,4.15,6119,30,0.7878
+SUP-0061,White-Estes,General Materials,Benjaminchester,3.73,10702,60,0.6826
+SUP-0062,Chandler-Edwards,General Materials,South Rachelborough,3.08,3179,90,0.5203
+SUP-0063,Williams-Graham,Plumbing,West Ryan,4.62,10650,30,0.9061
+SUP-0064,"Mccall, Hanson and Alvarado",Civil,Lake Rachelhaven,4.96,3840,90,0.9901
+SUP-0065,Estrada-Nguyen,HVAC,Angelaborough,4.11,14563,45,0.7766
+SUP-0066,Ortega-Gray,Civil,New Ashley,4.11,13328,90,0.7764
+SUP-0067,Kelley-Smith,HVAC,Jasonshire,4.66,6603,90,0.9142
+SUP-0068,"Pena, Marshall and Ramos",Electrical,New Thomas,4.51,3381,60,0.8771
+SUP-0069,"Jackson, Miller and Robertson",General Materials,Clarencebury,3.6,13212,30,0.6506
+SUP-0070,"Collins, Drake and Hernandez",HVAC,East Traceyland,3.4,14496,30,0.5996
+SUP-0071,Perry-Soto,Civil,Lake Heather,4.51,14590,45,0.878
+SUP-0072,Ross-Hernandez,Civil,Port Michelleville,3.55,6259,90,0.6367
+SUP-0073,Robinson-Brock,General Materials,Williamsbury,4.08,13482,30,0.7702
+SUP-0074,Bryant Group,Electrical,Stephaniemouth,4.21,13480,30,0.8027
+SUP-0075,"Briggs, Mcclain and Simmons",Plumbing,Merrittfort,3.83,6133,90,0.7077
+SUP-0076,Green-Wright,General Materials,Katiehaven,4.9,1205,30,0.9747
+SUP-0077,Sims-Hill,Civil,Lake Justinview,3.01,2844,90,0.5015
+SUP-0078,Flores-Fernandez,Civil,East Jesse,4.73,14113,60,0.9331
+SUP-0079,"Hernandez, Lewis and Perry",Civil,Amychester,4.75,16359,30,0.9376
+SUP-0080,Clark Group,Plumbing,Steinshire,3.29,4264,30,0.5722
+SUP-0081,"Smith, Gilmore and Johnston",Electrical,Smithstad,4.09,8525,45,0.7734
+SUP-0082,Molina-Castaneda,Electrical,Medinaside,4.47,2288,60,0.8678
+SUP-0083,"Hurst, Freeman and Nelson",Plumbing,Johnsonmouth,3.73,8658,60,0.6818
+SUP-0084,"Shelton, Powell and Martin",Civil,Calhounside,4.02,14145,45,0.7541
+SUP-0085,Meadows PLC,Electrical,North Dawnberg,4.57,2321,60,0.8915
+SUP-0086,White-Green,General Materials,Jasonmouth,4.22,8844,30,0.8038
+SUP-0087,Juarez-Gray,Fire Fighting,Kingland,3.96,9806,30,0.7394
+SUP-0088,Smith-Ryan,Plumbing,Jeffreyland,4.26,4899,60,0.8161
+SUP-0089,"Williams, Johnson and Wright",Plumbing,New Elijahberg,3.93,10828,60,0.7337
+SUP-0090,Caldwell-Elliott,General Materials,South Holly,4.29,7532,60,0.8228
+SUP-0091,Jackson-Lawson,Fire Fighting,Port Loriport,4.04,7986,30,0.7591
+SUP-0092,Lane LLC,Plumbing,Sandersborough,4.26,2759,45,0.8155
+SUP-0093,Vargas Ltd,Civil,North Heidi,4.86,9015,60,0.9656
+SUP-0094,Jefferson-Burke,Plumbing,Port Tonyaton,4.72,17202,45,0.9308
+SUP-0095,Patel-Stanley,Civil,New Deborahtown,3.93,15526,30,0.7318
+SUP-0096,Short-Garcia,Civil,Cynthiamouth,4.26,14255,60,0.8152
+SUP-0097,"Hernandez, Thompson and Boyd",Plumbing,Christinaside,4.03,19181,30,0.7563
+SUP-0098,Marshall-Petersen,Electrical,Marcusbury,3.96,16861,30,0.7399
+SUP-0099,Ramirez Group,Electrical,Port Steven,3.54,6473,30,0.6353
+SUP-0100,"Barnett, Rogers and Snyder",General Materials,Hunterborough,4.09,18188,60,0.7735
+SUP-0101,Salinas-Peterson,Plumbing,Angelahaven,4.61,17155,60,0.9021
+SUP-0102,Miller Ltd,Civil,Freemanbury,4.13,13158,60,0.7824
+SUP-0103,"Alvarez, Joseph and West",General Materials,North Kellyfurt,4.18,13938,45,0.7947
+SUP-0104,"Sanchez, Beck and Wood",Plumbing,Ronaldside,4.65,10343,45,0.9124
+SUP-0105,Bell-Chavez,Plumbing,Johnville,4.2,12765,45,0.8006
+SUP-0106,"Lee, Wilson and Herrera",Civil,East Javier,4.51,3961,45,0.8766
+SUP-0107,Hill-Lawrence,Civil,Tinaborough,4.35,3820,60,0.8384
+SUP-0108,Perez-White,Plumbing,Lake Amandaview,3.11,12858,90,0.5276
+SUP-0109,Mccann PLC,Fire Fighting,Heidiberg,3.85,16279,60,0.713
+SUP-0110,"Oneill, Henry and Salas",Civil,Taylormouth,4.76,11285,60,0.9398
+SUP-0111,Lopez-Williams,General Materials,Wilsonland,4.08,17562,90,0.77
+SUP-0112,Vasquez-Ray,Electrical,East Edwardshire,4.14,9566,60,0.784
+SUP-0113,Miller-Wright,Fire Fighting,Obrienbury,3.71,1573,90,0.6786
+SUP-0114,"James, Kerr and Evans",HVAC,Torreston,4.7,1449,90,0.9243
+SUP-0115,"Choi, Garcia and Farmer",Plumbing,West Donna,3.79,2487,30,0.6987
+SUP-0116,Allen PLC,Civil,East Aaronmouth,4.55,17233,45,0.887
+SUP-0117,"Wheeler, Carter and Hall",Fire Fighting,Jacquelinemouth,4.64,10721,90,0.9099
+SUP-0118,Mcdaniel LLC,Plumbing,South Danny,4.34,17140,90,0.8357
+SUP-0119,Holland LLC,Civil,North Brian,3.68,8785,60,0.6711
+SUP-0120,Larson-Holloway,Electrical,Scottmouth,4.38,19975,90,0.8455
+SUP-0121,"Torres, Powell and Nelson",Fire Fighting,Kimton,3.85,4780,45,0.7116
+SUP-0122,Navarro-Munoz,Electrical,North Jeremyshire,4.36,3120,45,0.8391
+SUP-0123,"Sampson, Key and Chambers",Civil,Barbaraburgh,4.46,19265,60,0.8643
+SUP-0124,Stone-Ramos,General Materials,Howardshire,4.83,11046,90,0.9586
+SUP-0125,Walters-Vasquez,Electrical,South Michaelmouth,3.74,987,90,0.6851
+SUP-0126,Santiago-Hodge,Electrical,Robertfort,3.37,5206,90,0.5927
+SUP-0127,Bates-Morales,Civil,South Christopherview,3.94,11985,45,0.7342
+SUP-0128,Wilson-Barton,Electrical,Lake Mollymouth,4.4,16385,30,0.8501
+SUP-0129,Brown-Stone,HVAC,Garrettton,4.02,3223,90,0.7543
+SUP-0130,Adams and Sons,General Materials,Samuelfort,4.92,19215,45,0.9812
+SUP-0131,Johnson Ltd,Fire Fighting,Lake Eric,4.35,12893,90,0.8387
+SUP-0132,"Smith, Russell and Walker",Electrical,South Staceyberg,3.71,1680,45,0.6785
+SUP-0133,Cantu-Carter,Plumbing,Robertfort,4.68,2666,45,0.9209
+SUP-0134,Sanchez-Arnold,Plumbing,Leehaven,4.06,10045,45,0.7659
+SUP-0135,"Suarez, Shields and Hill",Electrical,Morganhaven,4.87,7000,60,0.9669
+SUP-0136,Hoover-Campbell,Electrical,Maryshire,4.77,6949,30,0.9435
+SUP-0137,"Burns, Hernandez and Ryan",Electrical,Martinside,4.28,18691,90,0.819
+SUP-0138,Gibson-Morris,Electrical,Lake John,3.18,1110,60,0.5462
+SUP-0139,Hall-Rowe,HVAC,West Juliefurt,3.12,9427,90,0.5298
+SUP-0140,Mcneil-Sparks,General Materials,South Tammie,4.23,15572,60,0.8063
+SUP-0141,Shaw PLC,Civil,Mollymouth,4.8,11189,30,0.949
+SUP-0142,Fox Group,General Materials,Lake Douglasberg,4.22,12214,30,0.8056
+SUP-0143,Harrison LLC,Civil,Cindyfurt,4.12,16982,45,0.7801
+SUP-0144,"Miller, Murphy and Craig",Civil,Finleyfort,3.99,14902,30,0.7471
+SUP-0145,"Johnson, Jones and Welch",HVAC,Wendyland,3.97,5667,90,0.742
+SUP-0146,Good-Hodges,HVAC,South Garrettport,4.57,823,90,0.8914
+SUP-0147,Williams Inc,Plumbing,Michaelchester,4.31,9220,30,0.828
+SUP-0148,Sanchez Group,HVAC,East Gregory,4.41,6247,30,0.8533
+SUP-0149,"Pitts, Harvey and Allen",Fire Fighting,East Steven,4.73,10742,90,0.9317
+SUP-0150,Stevens-Estrada,HVAC,Santanaside,4.55,13713,45,0.8872
+SUP-0151,Jones LLC,Fire Fighting,Daniellechester,4.56,8846,90,0.8898
+SUP-0152,"Wright, Bruce and Gonzalez",Fire Fighting,Castanedaville,4.24,2334,90,0.8105
+SUP-0153,James LLC,Civil,Victoriaport,4.67,17659,60,0.9181
+SUP-0154,Spence Ltd,Plumbing,Hillshire,3.69,17628,90,0.6724
+SUP-0155,"Osborne, Beltran and Lozano",Civil,Wallport,4.65,17293,60,0.9131
+SUP-0156,Lawson LLC,General Materials,Lake James,4.63,2447,45,0.9067
+SUP-0157,Byrd-Le,Plumbing,Lake Colton,4.52,7287,60,0.8809
+SUP-0158,"Lucas, Parker and Alexander",HVAC,Jessicaland,4.3,11829,30,0.8254
+SUP-0159,Murphy-Perry,Civil,East Kristin,4.29,6502,30,0.8215
+SUP-0160,Schmidt-Mcintyre,Plumbing,West Robin,4.84,7119,90,0.9591
+SUP-0161,Coffey-Phillips,Fire Fighting,Lindamouth,4.71,1612,45,0.927
+SUP-0162,Taylor and Sons,Civil,Coffeyside,4.01,5559,45,0.7523
+SUP-0163,Davis-Foster,General Materials,Amandamouth,3.84,6381,90,0.71
+SUP-0164,Chambers-Chambers,Fire Fighting,Carsonstad,4.8,18082,30,0.9494
+SUP-0165,Leonard Group,HVAC,New Nicoleside,4.74,10659,30,0.9353
+SUP-0166,Herman-Walker,Civil,Lake Madisonport,4.52,5438,45,0.8794
+SUP-0167,"Ortiz, Taylor and Shah",Electrical,Wendyville,3.79,1341,60,0.6973
+SUP-0168,Young PLC,Electrical,South Shawn,4.87,18860,90,0.9674
+SUP-0169,"Avery, Horton and Fernandez",Civil,South Diana,3.79,17640,30,0.6983
+SUP-0170,Gilbert-Crosby,Electrical,Antoniostad,4.0,17101,30,0.7502
+SUP-0171,Ramos and Sons,Fire Fighting,Corystad,4.37,6003,45,0.8421
+SUP-0172,"Winters, Newman and Brown",Electrical,Jamesville,4.34,10830,90,0.8339
+SUP-0173,Davis-Lewis,Electrical,North Kristinbury,4.38,19216,30,0.8441
+SUP-0174,Buchanan and Sons,General Materials,Port Kathyborough,4.38,5437,60,0.844
+SUP-0175,"Robinson, Kane and Murphy",General Materials,Port Rachel,4.61,16873,30,0.902
+SUP-0176,Ramirez and Sons,Civil,New John,2.47,16457,45,0.3681
+SUP-0177,Rodriguez Inc,Civil,North Michael,4.36,1554,60,0.8399
+SUP-0178,Chapman Inc,Civil,West Brian,4.8,15975,30,0.9506
+SUP-0179,"Fisher, Wilson and Brown",HVAC,Stricklandhaven,4.34,16058,45,0.8356
+SUP-0180,"Rodriguez, Gordon and Dougherty",Fire Fighting,Lake Kristahaven,3.96,3470,60,0.7396
+SUP-0181,Ellis-Maynard,General Materials,South Melaniechester,4.85,12471,60,0.9633
+SUP-0182,"Rodriguez, Joseph and Wallace",General Materials,West Charleneland,4.16,7182,45,0.791
+SUP-0183,Hill Ltd,Plumbing,Oscarhaven,4.08,15143,30,0.77
+SUP-0184,Chavez-Jacobs,General Materials,Port Jacquelineside,4.03,6398,60,0.7578
+SUP-0185,"Glenn, Jordan and Beasley",Plumbing,Morganmouth,4.38,4195,45,0.8444
+SUP-0186,Perry-Davis,Electrical,Edwardsview,4.19,7176,60,0.7974
+SUP-0187,Mckay-Mcdaniel,Electrical,Jonesland,4.01,16197,30,0.7517
+SUP-0188,Reynolds Ltd,General Materials,Lisaside,4.42,15673,45,0.8554
+SUP-0189,Willis PLC,Electrical,Elizabethchester,4.04,14960,90,0.7594
+SUP-0190,Russo-Pugh,Electrical,Parrishton,4.83,11070,60,0.9581
+SUP-0191,Burke-Bell,HVAC,East Diane,4.4,11117,60,0.8492
+SUP-0192,Boone LLC,General Materials,Dannyview,4.52,8301,90,0.88
+SUP-0193,"Perez, Patterson and Hoffman",Fire Fighting,New Sarahview,3.64,16353,90,0.6598
+SUP-0194,White Ltd,HVAC,Sandrastad,4.59,5261,60,0.898
+SUP-0195,White and Sons,Electrical,Jonestown,2.98,14146,60,0.4958
+SUP-0196,Reese and Sons,Electrical,Barnesmouth,4.17,13073,30,0.7933
+SUP-0197,Wood Ltd,Fire Fighting,Kimberlyshire,4.48,1263,45,0.8702
+SUP-0198,"Miller, Williams and Moore",HVAC,Lake Christophermouth,4.59,16051,45,0.8969
+SUP-0199,"Coleman, Lawson and Perry",Plumbing,Port William,3.69,8321,90,0.6719
+SUP-0200,Jordan-Campbell,Electrical,Roseport,4.57,18691,45,0.8932
+SUP-0201,Walker PLC,Electrical,North Jamesborough,4.79,11724,30,0.9483
+SUP-0202,Duran LLC,HVAC,Davidfort,3.71,8758,90,0.6776
+SUP-0203,"Jordan, Anderson and Patel",Electrical,New Angelica,4.32,6748,45,0.829
+SUP-0204,"Drake, Jones and Hensley",Electrical,South Andrewland,4.18,9493,90,0.7961
+SUP-0205,Johnston-Berry,Civil,Robertsfurt,3.12,5086,60,0.5302
+SUP-0206,Burch and Sons,General Materials,Collierstad,3.92,16127,30,0.7311
+SUP-0207,Kim Inc,HVAC,South Brianna,4.63,4920,30,0.9069
+SUP-0208,"Miller, Harrell and Reese",Fire Fighting,West Kimberly,4.36,9008,30,0.8398
+SUP-0209,Dixon Inc,Civil,Port Michael,4.61,9368,30,0.9024
+SUP-0210,"Mullen, Brewer and Hernandez",Electrical,East Jonathanburgh,4.22,2308,60,0.8051
+SUP-0211,"Hernandez, Malone and Jones",Electrical,Marshallshire,4.94,12695,60,0.9862
+SUP-0212,"Cole, Glass and Cunningham",HVAC,Michellemouth,4.56,15154,90,0.8888
+SUP-0213,Gonzales Group,Fire Fighting,Welchview,4.2,4001,90,0.8002
+SUP-0214,"Brown, Romero and Collins",Plumbing,Johnsonstad,4.96,8161,30,0.9894
+SUP-0215,Jones-Lin,Plumbing,New Brookefurt,4.79,15045,45,0.9464
+SUP-0216,Carpenter-Best,Fire Fighting,South Reginashire,4.67,16656,45,0.9176
+SUP-0217,"Lopez, Jacobs and Mason",Plumbing,South Dalemouth,4.3,7296,30,0.8249
+SUP-0218,"Miller, Lucas and Williams",Plumbing,Ritterhaven,4.79,8014,60,0.9482
+SUP-0219,"Bishop, Cox and Hardin",Plumbing,Ortizmouth,4.82,15584,90,0.9554
+SUP-0220,"Harper, Mccormick and Holland",Fire Fighting,West Codyfurt,3.74,3853,30,0.6859
+SUP-0221,King-York,Electrical,West Christopher,4.86,1026,90,0.9644
+SUP-0222,"Thomas, Bailey and Ponce",Plumbing,Andersonland,3.67,2433,90,0.6675
+SUP-0223,Hansen-Schneider,Electrical,Lisahaven,4.54,7174,90,0.8854
+SUP-0224,Lucas Group,Civil,Andrewport,4.5,12404,30,0.876
+SUP-0225,Bean LLC,Civil,Leeberg,4.48,19271,30,0.8694
+SUP-0226,Jones Inc,HVAC,Lake Matthewberg,4.69,16486,45,0.9217
+SUP-0227,"Bennett, Martin and Guerra",General Materials,Lake Samuel,3.84,16126,45,0.7111
+SUP-0228,Diaz-Ball,Plumbing,Bishopmouth,4.62,10223,45,0.9041
+SUP-0229,Ferguson LLC,Fire Fighting,Mckeeborough,3.83,11759,60,0.7082
+SUP-0230,Gregory-Hudson,Civil,Murrayport,4.61,8469,45,0.9019
+SUP-0231,Shaw-Barnes,Plumbing,Port James,2.91,6178,45,0.4777
+SUP-0232,"Taylor, Wright and Davidson",Electrical,Angelaville,4.16,11310,30,0.7892
+SUP-0233,"Singleton, Rosales and Mitchell",Civil,West Shannon,4.15,15284,60,0.7869
+SUP-0234,"Hernandez, Kim and Potts",General Materials,Port Shannon,3.71,5519,30,0.6775
+SUP-0235,Arias-Perry,HVAC,Shawbury,4.4,19588,60,0.8498
+SUP-0236,Vang-Brooks,HVAC,West Sarahmouth,4.61,1251,90,0.9033
+SUP-0237,Taylor LLC,Electrical,Hortonberg,3.62,18757,90,0.6562
+SUP-0238,"Harrison, Gilbert and Bullock",Fire Fighting,West Jasonberg,4.54,17635,90,0.8855
+SUP-0239,"Bentley, Lynch and Henderson",General Materials,Johnville,3.05,15941,90,0.5113
+SUP-0240,Allen Ltd,Plumbing,Brownfort,4.88,4158,45,0.9699
+SUP-0241,"Herrera, Chen and Andrews",Fire Fighting,West Ruben,4.64,18731,30,0.911
+SUP-0242,"Gomez, Duncan and Lopez",Civil,New Theresaland,4.35,8643,45,0.8377
+SUP-0243,"Stephens, Hartman and Romero",Civil,South Morganton,4.46,8955,60,0.8638
+SUP-0244,"Hughes, Brooks and Burgess",Plumbing,Kristinastad,4.78,3686,45,0.9462
+SUP-0245,Quinn Ltd,Fire Fighting,Port Bonniemouth,4.4,10099,30,0.8491
+SUP-0246,Williams PLC,Electrical,Lisaburgh,4.28,2387,30,0.8211
+SUP-0247,"Marshall, Dominguez and Welch",Fire Fighting,North Jennifer,4.49,3108,45,0.8727
+SUP-0248,Johnson-Harris,Electrical,North Leslie,2.93,1200,60,0.4816
+SUP-0249,Robertson-Hays,General Materials,Kingborough,4.54,15354,90,0.8852
+SUP-0250,Kelly-Norman,HVAC,Joshuastad,4.23,2791,90,0.8077
+SUP-0251,Preston-Paul,General Materials,Morganburgh,4.37,3856,45,0.8432
+SUP-0252,Holt-Richardson,Civil,Lauriechester,4.67,6557,90,0.9181
+SUP-0253,Jordan and Sons,General Materials,Manuelland,4.12,7558,60,0.7811
+SUP-0254,Guerrero-Parker,Electrical,Jacksonmouth,4.28,2975,90,0.8206
+SUP-0255,West-Acosta,Fire Fighting,Christinachester,4.6,5958,30,0.8999
+SUP-0256,Fowler-Moody,Electrical,North Emilyfurt,4.38,8134,90,0.8451
+SUP-0257,Palmer-Brady,General Materials,North Douglas,4.37,6011,90,0.8428
+SUP-0258,"Gregory, Kim and Martinez",Plumbing,Port Deanna,4.77,4764,30,0.9436
+SUP-0259,Reyes-Bradley,General Materials,Lake Shannon,4.5,7604,45,0.8742
+SUP-0260,Watson-Hines,Plumbing,New Michael,4.46,10975,90,0.866
+SUP-0261,Banks-Wright,Fire Fighting,North Jillfort,4.75,8439,60,0.9368
+SUP-0262,"Hughes, Hoffman and Green",Plumbing,Janeborough,4.38,18941,45,0.8459
+SUP-0263,"Mitchell, Hendricks and Henry",Civil,East Melissamouth,3.93,15468,90,0.7334
+SUP-0264,Roach Group,Plumbing,Port Evelynmouth,4.6,3793,60,0.8992
+SUP-0265,"Reed, Brown and Daniels",HVAC,Melissaburgh,3.7,19479,60,0.6755
+SUP-0266,Hicks-Martinez,HVAC,Port Dominic,4.43,12062,45,0.8568
+SUP-0267,Johnson-Spencer,Plumbing,Tannerside,4.37,14533,60,0.8425
+SUP-0268,Salazar Inc,Electrical,West Raymondfort,3.6,15744,45,0.6492
+SUP-0269,"Jenkins, Ortiz and Andrews",Fire Fighting,West Dawn,4.63,12181,60,0.9067
+SUP-0270,Owens-Holmes,Plumbing,Port Kimberly,4.78,16336,60,0.9447
+SUP-0271,"Matthews, Saunders and Anderson",General Materials,Port Davidberg,4.31,4879,60,0.8286
+SUP-0272,Martin-Morris,Fire Fighting,West Stacey,4.7,5815,45,0.9255
+SUP-0273,"Jacobson, Singleton and King",Electrical,Davidport,4.26,16806,90,0.8142
+SUP-0274,"Ferguson, Shaw and Jackson",Fire Fighting,East Donna,3.8,7474,30,0.7003
+SUP-0275,"Winters, Morgan and Bradshaw",Civil,Port Michelleland,4.32,5184,60,0.8291
+SUP-0276,Fry PLC,Fire Fighting,Debrashire,4.62,15085,45,0.9044
+SUP-0277,Montgomery-Johnson,Civil,Dawnport,4.13,18242,30,0.7824
+SUP-0278,Sanchez-Aguirre,General Materials,Evansland,4.06,6620,45,0.7643
+SUP-0279,"Brown, Gonzales and Washington",Plumbing,West Catherine,4.25,12754,30,0.8114
+SUP-0280,Hensley-Flores,Plumbing,Theresaberg,4.09,17409,90,0.7714
+SUP-0281,Robertson-Rodriguez,Fire Fighting,South David,4.53,9639,45,0.8836
+SUP-0282,Wright-Davis,Civil,Soniachester,4.75,8443,30,0.9376
+SUP-0283,Estes and Sons,General Materials,Sarahmouth,4.73,2811,30,0.9315
+SUP-0284,Hines Group,Fire Fighting,Jimenezport,3.68,6629,45,0.6694
+SUP-0285,Johnson-Landry,HVAC,Levyborough,3.87,15061,60,0.7169
+SUP-0286,"Gomez, Williams and Simpson",Civil,Mitchelltown,4.49,19011,30,0.8724
+SUP-0287,Jordan LLC,Civil,Kathrynstad,4.57,6338,90,0.8933
+SUP-0288,Morales PLC,HVAC,West Angela,4.61,16382,45,0.9036
+SUP-0289,Hughes Group,Fire Fighting,Marciaville,3.97,11787,60,0.7437
+SUP-0290,Hester Group,General Materials,Lauramouth,3.32,16784,30,0.5805
+SUP-0291,"Mcmillan, Fischer and Gonzalez",Fire Fighting,Porterton,4.29,3236,45,0.8219
+SUP-0292,Taylor LLC,Fire Fighting,Stoneberg,4.22,15067,45,0.804
+SUP-0293,"Barry, Taylor and Velazquez",Fire Fighting,Franciscoport,4.32,3713,60,0.8312
+SUP-0294,"Rogers, Clayton and Patel",General Materials,Thomastown,4.72,8365,30,0.9295
+SUP-0295,Rivera-Rodriguez,Electrical,Silvatown,4.6,5140,30,0.9006
+SUP-0296,"Wells, Coffey and Patton",HVAC,Lake Brett,4.1,16023,45,0.774
+SUP-0297,Jackson-Fuller,General Materials,Hernandezbury,4.05,8355,60,0.7628
+SUP-0298,Armstrong Ltd,HVAC,East Andrewmouth,4.08,8284,30,0.7689
+SUP-0299,Hernandez-Vaughn,HVAC,Shawfort,4.95,10698,90,0.9877
+SUP-0300,"Luna, Thornton and Stone",HVAC,Whitneyfort,3.88,17414,90,0.7188
+SUP-0301,"Bennett, Frye and Stevens",Plumbing,Amyview,4.09,4152,90,0.7723
+SUP-0302,"Washington, Bernard and Ramirez",General Materials,Jeffreyport,4.56,15023,30,0.8892
+SUP-0303,Bush-Vaughn,Civil,Stewartstad,3.72,16726,90,0.68
+SUP-0304,"Peck, Pope and Hill",Civil,New Ericafurt,4.62,18306,30,0.9062
+SUP-0305,Cardenas-Blevins,General Materials,West Bobby,4.02,3556,45,0.756
+SUP-0306,"Miller, Bradshaw and Douglas",Plumbing,Lewisside,3.66,7364,45,0.6647
+SUP-0307,Fitzpatrick-Horton,General Materials,North Christina,4.57,12396,45,0.8932
+SUP-0308,"Allen, Williams and Stein",Electrical,Lake Jesse,4.86,17728,60,0.9645
+SUP-0309,Gutierrez Ltd,Plumbing,Garciaberg,4.75,6744,60,0.9383
+SUP-0310,Oconnell and Sons,General Materials,Delgadofort,4.4,10164,45,0.85
+SUP-0311,Santos-Avila,Civil,Manuelton,4.87,4854,60,0.9673
+SUP-0312,Pearson and Sons,Civil,East Robertburgh,4.22,17771,30,0.8056
+SUP-0313,Osborn Group,Civil,Lopezport,4.53,7745,90,0.8816
+SUP-0314,Smith PLC,HVAC,West Justinside,4.5,10866,90,0.8755
+SUP-0315,"Snyder, Mays and Rosales",General Materials,Nelsonville,3.8,5630,30,0.7004
+SUP-0316,Martin-Stevens,HVAC,Jennifertown,3.82,18106,30,0.705
+SUP-0317,"Rogers, Phillips and Craig",HVAC,East Cheryl,2.77,1087,60,0.4413
+SUP-0318,"Prince, Wilcox and Robertson",Electrical,South Elizabethburgh,4.14,16631,60,0.7858
+SUP-0319,Woods and Sons,Fire Fighting,West Patrickmouth,4.47,3773,30,0.8673
+SUP-0320,Finley-Turner,Civil,West Desireebury,4.29,3809,90,0.8222
+SUP-0321,Contreras Group,Civil,Erikhaven,4.37,17690,30,0.8429
+SUP-0322,"Carrillo, Vaughn and Fowler",General Materials,Michaelbury,4.65,6499,60,0.9133
+SUP-0323,Bernard Group,Plumbing,South Julie,3.76,3524,90,0.6904
+SUP-0324,"Brooks, Miles and Durham",Civil,Port John,4.33,3134,45,0.8321
+SUP-0325,"Marks, Miller and Griffin",Civil,Christianshire,3.83,16733,90,0.7075
+SUP-0326,Brown PLC,Plumbing,New Amanda,4.18,5122,45,0.7952
+SUP-0327,Murphy PLC,Plumbing,Wilsonborough,4.84,13019,90,0.9604
+SUP-0328,"Aguilar, Davis and Dixon",General Materials,South Davidchester,4.15,14881,90,0.7883
+SUP-0329,Elliott-Hansen,HVAC,Jenniferfurt,3.19,11947,60,0.5472
+SUP-0330,Velasquez-Reese,General Materials,North Rodneyland,4.37,8922,30,0.8428
+SUP-0331,"Mcknight, Michael and Jones",Plumbing,Johnsonchester,4.17,8208,45,0.7935
+SUP-0332,Mack Ltd,HVAC,Brooksfurt,4.08,8539,90,0.7704
+SUP-0333,Kane-Knox,Electrical,Millerside,4.93,7320,60,0.9819
+SUP-0334,Valdez LLC,Fire Fighting,East Victoriafurt,3.68,5625,60,0.6697
+SUP-0335,"Anderson, Irwin and Davenport",Civil,West Stevenside,2.83,13529,30,0.4565
+SUP-0336,Patel-Morrow,Plumbing,South Michael,4.72,6412,90,0.9303
+SUP-0337,Lopez-Golden,Plumbing,North Lisachester,4.1,3900,60,0.7758
+SUP-0338,"Miranda, Stephenson and Smith",Plumbing,North Craig,4.61,12915,30,0.9025
+SUP-0339,Griffin Ltd,Civil,East Joyfurt,4.82,2543,90,0.9555
+SUP-0340,Young-Robinson,General Materials,East Williamport,4.49,11302,45,0.8729
+SUP-0341,Cabrera Ltd,General Materials,Barbaramouth,4.65,933,30,0.9129
+SUP-0342,Turner and Sons,Fire Fighting,South Kevin,4.51,3530,90,0.8765
+SUP-0343,Hawkins PLC,Plumbing,Lake Erika,4.43,7074,60,0.8576
+SUP-0344,"Simpson, Compton and David",General Materials,Floydmouth,4.65,3425,90,0.9126
+SUP-0345,"Butler, Hernandez and Bennett",Electrical,Allenbury,2.63,14938,60,0.4087
+SUP-0346,Mathews-Thomas,Plumbing,Melendezside,4.49,1396,60,0.8724
+SUP-0347,Faulkner-Grant,HVAC,South John,4.74,1393,90,0.9348
+SUP-0348,Rivera Inc,Plumbing,Booneland,4.14,9762,45,0.7855
+SUP-0349,"Hardy, Lee and Adams",Electrical,Port Charlesshire,4.74,9001,60,0.9347
+SUP-0350,"Powers, Robinson and Clark",General Materials,Kevintown,4.71,18626,90,0.9274
