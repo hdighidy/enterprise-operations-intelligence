@@ -32,6 +32,8 @@ NUM_EMPLOYEES = 2_000
 NUM_EQUIPMENT = 1_000
 NUM_PROJECTS = 150
 
+MIN_ACTIVITIES_PER_PROJECT = 40
+MAX_ACTIVITIES_PER_PROJECT = 180
 
 # ============================================================
 # Data Generation Helpers
