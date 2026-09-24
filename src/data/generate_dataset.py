@@ -13,24 +13,20 @@ from src.data.config import (
 
 from src.data.generators.employee_generator import (
     generate_employees,)
-
 from src.data.generators.equipment_generator import (
     generate_equipment,)
-
 from src.data.generators.material_generator import (
     generate_materials,)
-
 from src.data.generators.supplier_generator import (
     generate_suppliers,)
-
 from src.data.generators.project_generator import (
     generate_projects,)
-
 from src.data.generators.activity_generator import (
     generate_project_activities,)
-
 from src.data.generators.purchase_order_generator import (
     generate_purchase_orders,)
+from src.data.generators.delivery_generator import (
+    generate_deliveries,)
 
 
 def main() -> None:
@@ -70,6 +66,14 @@ def main() -> None:
         projects=projects,
         materials=materials,
         suppliers=suppliers,
+        seed=RANDOM_SEED,
+    )
+
+    print("Generating deliveries...")
+    deliveries = generate_deliveries(
+        purchase_orders=purchase_orders,
+        suppliers=suppliers,
+        materials=materials,
         seed=RANDOM_SEED,
     )
 
@@ -122,16 +126,24 @@ def main() -> None:
         index=False,
     )
 
-    print("\nGeneration completed.")
+    deliveries.to_csv(
+        RAW_DATA_DIR / "deliveries.csv",
+        index=False,
+    )
 
+
+
+    print("\nGeneration completed.")
     print(f"Materials:  {len(materials):,}")
     print(f"Suppliers:  {len(suppliers):,}")
     print(f"Employees:  {len(employees):,}")
     print(f"Equipment:  {len(equipment):,}")
     print(f"Projects:   {len(projects):,}")
     print(f"Purchase Orders: {len(purchase_orders):,}")
+    print(f"Deliveries: {len(deliveries):,}")   
     print(f"Activities: {len(project_activities):,}")
     print(f"\nFiles generated in:\n{RAW_DATA_DIR}")
+    print(f"Deliveries: {len(deliveries):,}")
 
 
 if __name__ == "__main__":
