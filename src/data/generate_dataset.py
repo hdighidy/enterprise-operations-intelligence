@@ -63,6 +63,9 @@ def main() -> None:
     ].tolist(),
     )
 
+    print("Generating equipment...")
+    equipment = generate_equipment(n=NUM_EQUIPMENT)
+
     print("Generating purchase orders...")
     purchase_orders = generate_purchase_orders(
         projects=projects,
@@ -89,7 +92,6 @@ def main() -> None:
     )
 
     print("Generating material consumption...")
-
     material_consumption = (generate_material_consumption(
         projects=projects,
         materials=materials,
@@ -98,11 +100,6 @@ def main() -> None:
         seed=42,
 
     ))
-
-
-    print("Generating equipment...")
-    equipment = generate_equipment(
-        n=NUM_EQUIPMENT)
 
     materials.to_csv(
         RAW_DATA_DIR / "materials.csv",
