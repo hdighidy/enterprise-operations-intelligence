@@ -27,6 +27,8 @@ from src.data.generators.purchase_order_generator import (
     generate_purchase_orders,)
 from src.data.generators.delivery_generator import (
     generate_deliveries,)
+from src.data.generators.material_consumption_generator import (
+    generate_material_consumption,)
 
 
 def main() -> None:
@@ -86,30 +88,37 @@ def main() -> None:
        )
     )
 
+    print("Generating material consumption...")
+
+    material_consumption = (generate_material_consumption(
+        projects=projects,
+        materials=materials,
+        activities=project_activities,
+        deliveries=deliveries,
+        seed=42,
+
+    ))
+
+
     print("Generating equipment...")
     equipment = generate_equipment(
-        n=NUM_EQUIPMENT
-    )
+        n=NUM_EQUIPMENT)
 
     materials.to_csv(
         RAW_DATA_DIR / "materials.csv",
-        index=False,
-    )
+        index=False,)
 
     suppliers.to_csv(
         RAW_DATA_DIR / "suppliers.csv",
-        index=False,
-    )
+        index=False,)
 
     employees.to_csv(
         RAW_DATA_DIR / "employees.csv",
-        index=False,
-    )
+        index=False,)
 
     projects.to_csv(
         RAW_DATA_DIR / "projects.csv",
-        index=False,
-    )
+        index=False,)
 
     purchase_orders.to_csv(
         RAW_DATA_DIR / "purchase_orders.csv",
@@ -131,6 +140,11 @@ def main() -> None:
         index=False,
     )
 
+    material_consumption.to_csv(
+        RAW_DATA_DIR / "material_consumption.csv",
+        index=False,
+    )
+
 
 
     print("\nGeneration completed.")
@@ -144,6 +158,8 @@ def main() -> None:
     print(f"Activities: {len(project_activities):,}")
     print(f"\nFiles generated in:\n{RAW_DATA_DIR}")
     print(f"Deliveries: {len(deliveries):,}")
+    print(f"Material Consumption Records: {len(material_consumption):,}")
+
 
 
 if __name__ == "__main__":
