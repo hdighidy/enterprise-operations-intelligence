@@ -31,6 +31,8 @@ from src.data.generators.material_consumption_generator import (
     generate_material_consumption,)
 from src.data.generators.equipment_event_generator import (
     generate_equipment_events,)
+from src.data.generators.project_daily_performance_generator import (
+    generate_project_daily_performance,)
 
 
 def main() -> None:
@@ -112,6 +114,19 @@ def main() -> None:
         days=180,
     )
 
+    print("Generating project daily performance...")
+    project_daily_performance = (
+        generate_project_daily_performance(
+            projects=projects,
+            activities=project_activities,
+            deliveries=deliveries,
+            material_consumption=material_consumption,
+            equipment_events=equipment_events,
+            seed=42,
+            max_projects=150,
+        )
+    )
+
 
     materials.to_csv(RAW_DATA_DIR / "materials.csv", index=False,)
     suppliers.to_csv(RAW_DATA_DIR / "suppliers.csv", index=False,)
@@ -123,7 +138,7 @@ def main() -> None:
     deliveries.to_csv(RAW_DATA_DIR / "deliveries.csv", index=False,)
     material_consumption.to_csv(RAW_DATA_DIR / "material_consumption.csv", index=False,)
     equipment_events.to_csv(RAW_DATA_DIR / "equipment_events.csv", index=False,)
-
+    project_daily_performance.to_csv(RAW_DATA_DIR / "project_daily_performance.csv", index=False,)
 
 
     print("\nGeneration completed.")
@@ -139,6 +154,7 @@ def main() -> None:
     print(f"Deliveries: {len(deliveries):,}")
     print(f"Material Consumption Records: {len(material_consumption):,}")
     print(f"Equipment Events: " f"{len(equipment_events):,}")
+    print("Project Daily Performance: " f"{len(project_daily_performance):,}")
 
 
 
