@@ -29,6 +29,8 @@ from src.data.generators.delivery_generator import (
     generate_deliveries,)
 from src.data.generators.material_consumption_generator import (
     generate_material_consumption,)
+from src.data.generators.equipment_event_generator import (
+    generate_equipment_events,)
 
 
 def main() -> None:
@@ -102,46 +104,25 @@ def main() -> None:
         materials_per_activity=2,
     )
 
-    materials.to_csv(
-        RAW_DATA_DIR / "materials.csv",
-        index=False,)
-
-    suppliers.to_csv(
-        RAW_DATA_DIR / "suppliers.csv",
-        index=False,)
-
-    employees.to_csv(
-        RAW_DATA_DIR / "employees.csv",
-        index=False,)
-
-    projects.to_csv(
-        RAW_DATA_DIR / "projects.csv",
-        index=False,)
-
-    purchase_orders.to_csv(
-        RAW_DATA_DIR / "purchase_orders.csv",
-        index=False,
+    print("Generating equipment events...")
+    equipment_events = generate_equipment_events(
+        equipment=equipment,
+        seed=42,
+        max_equipment=500,
+        days=180,
     )
 
-    project_activities.to_csv(
-         RAW_DATA_DIR / "project_activities.csv",
-        index=False,
-    )
 
-    equipment.to_csv(
-        RAW_DATA_DIR / "equipment.csv",
-        index=False,
-    )
-
-    deliveries.to_csv(
-        RAW_DATA_DIR / "deliveries.csv",
-        index=False,
-    )
-
-    material_consumption.to_csv(
-        RAW_DATA_DIR / "material_consumption.csv",
-        index=False,
-    )
+    materials.to_csv(RAW_DATA_DIR / "materials.csv", index=False,)
+    suppliers.to_csv(RAW_DATA_DIR / "suppliers.csv", index=False,)
+    employees.to_csv(RAW_DATA_DIR / "employees.csv", index=False,)
+    projects.to_csv(RAW_DATA_DIR / "projects.csv", index=False,)
+    purchase_orders.to_csv(RAW_DATA_DIR / "purchase_orders.csv", index=False,)
+    project_activities.to_csv(RAW_DATA_DIR / "project_activities.csv", index=False,)
+    equipment.to_csv(RAW_DATA_DIR / "equipment.csv", index=False,)
+    deliveries.to_csv(RAW_DATA_DIR / "deliveries.csv", index=False,)
+    material_consumption.to_csv(RAW_DATA_DIR / "material_consumption.csv", index=False,)
+    equipment_events.to_csv(RAW_DATA_DIR / "equipment_events.csv", index=False,)
 
 
 
@@ -157,6 +138,7 @@ def main() -> None:
     print(f"\nFiles generated in:\n{RAW_DATA_DIR}")
     print(f"Deliveries: {len(deliveries):,}")
     print(f"Material Consumption Records: {len(material_consumption):,}")
+    print(f"Equipment Events: " f"{len(equipment_events):,}")
 
 
 
