@@ -32,7 +32,6 @@ from src.data.generators.material_consumption_generator import (
 
 
 def main() -> None:
-
     print("=" * 60)
     print("Enterprise Operations Intelligence")
     print("Synthetic Data Generation")
@@ -91,15 +90,17 @@ def main() -> None:
        )
     )
 
+
     print("Generating material consumption...")
-    material_consumption = (generate_material_consumption(
+    material_consumption = generate_material_consumption(
         projects=projects,
         materials=materials,
         activities=project_activities,
         deliveries=deliveries,
         seed=42,
-
-    ))
+        max_activities=3000,
+        materials_per_activity=2,
+    )
 
     materials.to_csv(
         RAW_DATA_DIR / "materials.csv",
