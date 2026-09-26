@@ -10,25 +10,38 @@ def generate_material_consumption(
     activities: pd.DataFrame,
     deliveries: pd.DataFrame,
     seed: int = 42,
+    max_activities: int = 3000,
+    materials_per_activity: int = 2,
 ) -> pd.DataFrame:
     """
-    Generate daily material consumption records.
+    Generate development-scale material consumption data.
 
-    Consumption is influenced by:
-        - project activity
-        - project complexity
-        - material criticality
-        - project progress
-        - delivered quantities
+    Designed for local development on resource-constrained machines.
 
-    This dataset will later support:
-        - demand forecasting
-        - stockout prediction
-        - inventory optimization
-        - material planning
+    Default target:
+        ~150K-250K records depending on activity durations.
+
+    Parameters
+    ----------
+    max_activities:
+        Maximum number of activities used to generate consumption.
+
+    materials_per_activity:
+        Number of materials associated with each activity.
+
+    The generator preserves relationships between:
+        Project
+        Activity
+        Material
+        Delivery
+        Consumption
     """
 
     rng = np.random.default_rng(seed)
+
+    # ==========================================================
+    # Validate input columns
+    # ==========================================================
 
     required_project_columns = {
         "project_id",
@@ -96,42 +109,165 @@ def generate_material_consumption(
             f"Missing delivery columns: {sorted(missing)}"
         )
 
+    # ==========================================================
+    # Copy data
+    # ==========================================================
+
     projects = projects.copy()
     materials = materials.copy()
     activities = activities.copy()
     deliveries = deliveries.copy()
 
     activities["planned_start_date"] = pd.to_datetime(
-        activities["planned_start_date"])
+        activities["planned_start_date"]
+    )
 
     activities["planned_finish_date"] = pd.to_datetime(
-        activities["planned_finish_date"])
+        activities["planned_finish_date"]
+    )
 
     deliveries["actual_delivery_date"] = pd.to_datetime(
-        deliveries["actual_delivery_date"])
+        deliveries["actual_delivery_date"]
+    )
 
-    project_lookup = projects.set_index(
-        "project_id")
+    # ==========================================================
+    # Limit activities for local development
+    # ==========================================================
 
-    material_lookup = materials.set_index(
-        "material_id")
+    if len(activities) > max_activities:
+
+        activities = activities.sample(
+            n=max_activities,
+            random_state=seed,
+        )
+
+        activities = activities.sort_values(
+            [
+                "project_id",
+                "planned_start_date",
+            ]
+        )
+
+        activities = activities.reset_index(
+            drop=True
+        )
+
+    # ==========================================================
+    # Lookup dictionaries
+    # ==========================================================
+
+    project_lookup = (
+        projects
+        .set_index("project_id")
+        .to_dict("index")
+    )
+
+    # ==========================================================
+    # Pre-aggregate deliveries
+    #
+    # This is the major performance improvement.
+    #
+    # Instead of filtering the entire deliveries dataframe
+    # for every consumption record, we aggregate once.
+    # ==========================================================
+
+    delivery_summary = (
+        deliveries[
+            [
+                "project_id",
+                "material_id",
+                "actual_delivery_date",
+                "delivered_quantity",
+            ]
+        ]
+        .sort_values(
+            [
+                "project_id",
+                "material_id",
+                "actual_delivery_date",
+            ]
+        )
+        .copy()
+    )
+
+    delivery_summary[
+        "cumulative_delivered_quantity"
+    ] = (
+        delivery_summary
+        .groupby(
+            [
+                "project_id",
+                "material_id",
+            ]
+        )["delivered_quantity"]
+        .cumsum()
+    )
+
+    # ==========================================================
+    # Create lookup structure for delivery history
+    # ==========================================================
+
+    delivery_lookup = {}
+
+    for (
+        project_id,
+        material_id,
+    ), group in delivery_summary.groupby(
+        [
+            "project_id",
+            "material_id",
+        ]
+    ):
+
+        delivery_lookup[
+            (
+                project_id,
+                material_id,
+            )
+        ] = (
+            group[
+                [
+                    "actual_delivery_date",
+                    "cumulative_delivered_quantity",
+                ]
+            ]
+            .sort_values(
+                "actual_delivery_date"
+            )
+            .reset_index(drop=True)
+        )
+
+    # ==========================================================
+    # Prepare materials
+    # ==========================================================
+
+    material_records = materials[
+        [
+            "material_id",
+            "criticality",
+            "standard_price",
+        ]
+    ].to_dict("records")
 
     records = []
 
     consumption_id = 1
 
-    # ---------------------------------------------------------
-    # Generate consumption around project activities
-    # ---------------------------------------------------------
+    # ==========================================================
+    # Generate consumption
+    # ==========================================================
 
-    for _, activity in activities.iterrows():
+    for activity_index, (_, activity) in enumerate(
+        activities.iterrows(),
+        start=1,
+    ):
 
         project_id = activity["project_id"]
 
-        if project_id not in project_lookup.index:
+        if project_id not in project_lookup:
             continue
 
-        project = project_lookup.loc[
+        project = project_lookup[
             project_id
         ]
 
@@ -144,7 +280,10 @@ def generate_material_consumption(
             "MEDIUM": 1.00,
             "HIGH": 1.30,
             "VERY_HIGH": 1.60,
-        }.get(complexity, 1.0)
+        }.get(
+            complexity,
+            1.0,
+        )
 
         start_date = pd.Timestamp(
             activity["planned_start_date"]
@@ -159,44 +298,46 @@ def generate_material_consumption(
             (finish_date - start_date).days,
         )
 
-        # Not every material is consumed by every activity.
-        material_sample_size = min(
-            8,
-            len(materials),
-        )
+        # ------------------------------------------------------
+        # Select materials
+        # ------------------------------------------------------
 
-        selected_materials = materials.sample(
-            n=material_sample_size,
-            random_state=int(
-                rng.integers(
-                    0,
-                    1_000_000,
-                )
+        selected_materials = rng.choice(
+            material_records,
+            size=min(
+                materials_per_activity,
+                len(material_records),
             ),
+            replace=False,
         )
 
-        for _, material in selected_materials.iterrows():
+        for material in selected_materials:
 
-            material_id = material["material_id"]
+            material_id = material[
+                "material_id"
+            ]
 
             criticality = material[
                 "criticality"
             ]
 
             criticality_factor = {
-                "LOW": 0.8,
-                "MEDIUM": 1.0,
-                "HIGH": 1.3,
-                "CRITICAL": 1.6,
-            }.get(criticality, 1.0)
+                "LOW": 0.80,
+                "MEDIUM": 1.00,
+                "HIGH": 1.30,
+                "CRITICAL": 1.60,
+            }.get(
+                criticality,
+                1.0,
+            )
 
-            # -------------------------------------------------
-            # Daily consumption
-            # -------------------------------------------------
+            # --------------------------------------------------
+            # Base consumption rate
+            # --------------------------------------------------
 
             base_daily_consumption = rng.uniform(
-                2,
-                30,
+                3,
+                20,
             )
 
             planned_consumption = (
@@ -205,50 +346,54 @@ def generate_material_consumption(
                 * criticality_factor
             )
 
-            planned_consumption = max(
-                0.5,
-                planned_consumption,
-            )
-
             planned_consumption = round(
-                planned_consumption,
+                max(
+                    0.5,
+                    planned_consumption,
+                ),
                 2,
             )
 
-            # -------------------------------------------------
-            # Actual consumption
-            # -------------------------------------------------
+            # --------------------------------------------------
+            # Activity progress
+            # --------------------------------------------------
 
             progress_factor = max(
-                0.1,
-                float(activity["progress_pct"])
-                / 100.0,
+                0.15,
+                min(
+                    1.0,
+                    float(
+                        activity[
+                            "progress_pct"
+                        ]
+                    )
+                    / 100.0,
+                ),
             )
 
             actual_consumption = (
                 planned_consumption
                 * progress_factor
-                * rng.uniform(
-                    0.75,
-                    1.25,
+            )
+
+            # --------------------------------------------------
+            # Delivery lookup
+            # --------------------------------------------------
+
+            delivery_history = delivery_lookup.get(
+                (
+                    project_id,
+                    material_id,
                 )
             )
 
-            actual_consumption = max(
-                0,
-                actual_consumption,
-            )
-
-            actual_consumption = round(
-                actual_consumption,
-                2,
-            )
-
-            # -------------------------------------------------
+            # --------------------------------------------------
             # Daily records
-            # -------------------------------------------------
+            # --------------------------------------------------
 
-            for day in range(duration + 1):
+            for day in range(
+                duration + 1
+            ):
 
                 consumption_date = (
                     start_date
@@ -257,7 +402,7 @@ def generate_material_consumption(
                     )
                 )
 
-                # Small daily seasonality
+                # Weekend reduction
                 weekday_factor = (
                     0.90
                     if consumption_date.weekday()
@@ -265,67 +410,102 @@ def generate_material_consumption(
                     else 1.0
                 )
 
-                daily_planned = round(
+                daily_planned = (
                     planned_consumption
-                    * weekday_factor,
-                    2,
+                    * weekday_factor
                 )
 
-                daily_actual = round(
+                daily_actual = (
                     actual_consumption
                     * weekday_factor
                     * rng.uniform(
                         0.85,
                         1.15,
+                    )
+                )
+
+                daily_planned = round(
+                    max(
+                        0,
+                        daily_planned,
                     ),
                     2,
                 )
 
-                # -------------------------------------------------
-                # Delivery availability
-                # -------------------------------------------------
+                daily_actual = round(
+                    max(
+                        0,
+                        daily_actual,
+                    ),
+                    2,
+                )
 
-                delivered_before_date = deliveries[
-                    (
-                        deliveries["project_id"]
-                        == project_id
-                    )
-                    &
-                    (
-                        deliveries["material_id"]
-                        == material_id
-                    )
-                    &
-                    (
-                        deliveries[
+                # --------------------------------------------------
+                # Determine available delivered quantity
+                #
+                # Search only the delivery history for this
+                # project/material combination.
+                # --------------------------------------------------
+
+                if delivery_history is None:
+
+                    available_quantity = 0.0
+
+                else:
+
+                    dates = (
+                        delivery_history[
                             "actual_delivery_date"
-                        ]
-                        <= consumption_date
+                        ].values
                     )
-                ]
 
-                available_quantity = (
-                    delivered_before_date[
-                        "delivered_quantity"
-                    ].sum()
-                )
+                    position = np.searchsorted(
+                        dates,
+                        np.datetime64(
+                            consumption_date
+                        ),
+                        side="right",
+                    )
 
-                # -------------------------------------------------
-                # Inventory signal
-                # -------------------------------------------------
+                    if position == 0:
 
-                cumulative_consumption = (
-                    daily_actual
-                )
+                        available_quantity = 0.0
+
+                    else:
+
+                        available_quantity = float(
+                            delivery_history.iloc[
+                                position - 1
+                            ][
+                                "cumulative_delivered_quantity"
+                            ]
+                        )
+
+                # --------------------------------------------------
+                # Consumption-to-availability signal
+                # --------------------------------------------------
 
                 stockout_flag = int(
                     available_quantity
-                    < cumulative_consumption
+                    < daily_actual
                 )
 
-                # -------------------------------------------------
+                utilization_ratio = (
+                    daily_actual
+                    / max(
+                        available_quantity,
+                        1.0,
+                    )
+                )
+
+                utilization_ratio = min(
+                    utilization_ratio,
+                    10.0,
+                )
+
+                # --------------------------------------------------
                 # Record
-                # -------------------------------------------------
+                # --------------------------------------------------
 
                 records.append(
                     {
@@ -348,11 +528,13 @@ def generate_material_consumption(
                         ),
                         "available_delivered_quantity": (
                             round(
-                                float(
-                                    available_quantity
-                                ),
+                                available_quantity,
                                 2,
                             )
+                        ),
+                        "utilization_ratio": round(
+                            utilization_ratio,
+                            4,
                         ),
                         "stockout_flag": (
                             stockout_flag
@@ -368,5 +550,19 @@ def generate_material_consumption(
                 )
 
                 consumption_id += 1
+
+        # ------------------------------------------------------
+        # Progress message
+        # ------------------------------------------------------
+
+        if (
+            activity_index % 500 == 0
+        ):
+
+            print(
+                "Material consumption progress: "
+                f"{activity_index:,}/"
+                f"{len(activities):,} activities"
+            )
 
     return pd.DataFrame(records)
