@@ -27,6 +27,7 @@ RAW_DATE_COLUMNS = {
     "date",
     "planned_start_date",
     "planned_end_date",
+    "actual_start_date",
 }
 
 TARGET_COLUMN = "delay_next_30_days"
