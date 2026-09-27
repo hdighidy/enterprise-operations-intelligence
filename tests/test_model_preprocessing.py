@@ -89,3 +89,17 @@ def test_missing_numeric_value_is_handled():
 
     assert transformed.shape[0] == 3
     assert transformed.shape[1] >= 2
+
+
+def test_actual_start_date_is_not_model_feature():
+    df = pd.DataFrame({
+        "actual_start_date": ["2025-01-01", "2025-02-01"],
+        "numeric_feature": [1.0, 2.0],
+        "project_complexity": ["LOW", "HIGH"],
+    })
+
+    numeric, categorical = get_model_columns(df)
+
+    features = set(numeric + categorical)
+
+    assert "actual_start_date" not in features
