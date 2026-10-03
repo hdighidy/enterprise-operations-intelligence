@@ -103,3 +103,72 @@ def test_actual_start_date_is_not_model_feature():
     features = set(numeric + categorical)
 
     assert "actual_start_date" not in features
+
+def test_tree_preprocessor_does_not_scale_numeric_features():
+    numeric_columns = ["feature_a"]
+    categorical_columns = ["category"]
+
+    preprocessor = build_preprocessor(
+        numeric_columns,
+        categorical_columns,
+        model_family="tree",
+    )
+
+    numeric_pipeline = next(
+        transformer
+        for name, transformer, columns
+        in preprocessor.transformers
+        if name == "numeric"
+    )
+
+    assert "scaler" not in numeric_pipeline.named_steps
+
+
+def test_linear_preprocessor_scales_numeric_features():
+    numeric_columns = ["feature_a"]
+    categorical_columns = ["category"]
+
+    preprocessor = build_preprocessor(
+        numeric_columns,
+        categorical_columns,
+        model_family="linear",
+    )
+
+    numeric_pipeline = next(
+        transformer
+        for name, transformer, columns
+        in preprocessor.transformers
+        if name == "numeric"
+    )
+
+    assert "scaler" in numeric_pipeline.named_steps
+
+
+def test_raw_dates_are_excluded():
+    import pandas as pd
+
+    df = pd.DataFrame(
+        {
+            "date": pd.to_datetime(
+                ["2026-01-01"]
+            ),
+            "planned_start_date": pd.to_datetime(
+                ["2026-01-01"]
+            ),
+            "planned_end_date": pd.to_datetime(
+                ["2026-02-01"]
+            ),
+            "actual_start_date": pd.to_datetime(
+                ["2026-01-02"]
+            ),
+            "numeric_feature": [1.0],
+            "category": ["A"],
+        }
+    )
+
+    numeric, categorical = get_model_columns(df)
+
+    assert "date" not in numeric
+    assert "date" not in categorical
+    assert "planned_start_date" not in numeric
+    assert "actual_start_date" not in numeric
