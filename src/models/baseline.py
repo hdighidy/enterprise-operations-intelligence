@@ -1,3 +1,28 @@
+"""
+Step 10.3 — Baseline Model
+
+Establish a reproducible Logistic Regression baseline for predicting
+whether a project will experience a delay within the next 30 days.
+
+Architecture:
+    ML Dataset
+        ↓
+    Time-Based Split
+        ↓
+    Feature / Target Contract
+        ↓
+    Linear Preprocessing
+        ↓
+    Logistic Regression
+        ↓
+    Validation Evaluation
+
+Important:
+    - The test set is intentionally NOT evaluated here.
+    - Model selection and threshold tuning must use validation data.
+    - The test set is reserved for final evaluation.
+"""
+
 from __future__ import annotations
 
 from pathlib import Path
@@ -5,164 +30,406 @@ from pathlib import Path
 import pandas as pd
 from sklearn.dummy import DummyClassifier
 from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import (
-    accuracy_score,
-    average_precision_score,
-    confusion_matrix,
-    f1_score,
-    precision_score,
-    recall_score,
-    roc_auc_score,
-)
 from sklearn.pipeline import Pipeline
 
-from src.models.dataset import load_ml_dataset, prepare_features_and_target
-from src.models.preprocessing import build_preprocessor, get_model_columns
+from src.models.dataset import (
+    load_ml_dataset,
+    prepare_features_and_target,
+)
+from src.models.evaluation import evaluate_classifier
+from src.models.preprocessing import (
+    build_preprocessor,
+    get_model_columns,
+)
 from src.models.split import time_based_split
 
 
-INPUT_PATH = Path("data/processed/ml_dataset.csv")
+# ---------------------------------------------------------------------
+# Configuration
+# ---------------------------------------------------------------------
+
+INPUT_PATH = Path(
+    "data/processed/ml_dataset.csv"
+)
+
+TARGET_COLUMN = "delay_next_30_days"
+
+RANDOM_STATE = 42
 
 
-def evaluate_model(
-    model,
-    X,
-    y,
-    model_name: str,
-) -> dict:
-    """Evaluate a binary classification model."""
-
-    probabilities = model.predict_proba(X)[:, 1]
-    predictions = (probabilities >= 0.5).astype(int)
-
-    metrics = {
-        "model": model_name,
-        "roc_auc": roc_auc_score(y, probabilities),
-        "pr_auc": average_precision_score(y, probabilities),
-        "accuracy": accuracy_score(y, predictions),
-        "precision": precision_score(
-            y,
-            predictions,
-            zero_division=0,
-        ),
-        "recall": recall_score(
-            y,
-            predictions,
-            zero_division=0,
-        ),
-        "f1": f1_score(
-            y,
-            predictions,
-            zero_division=0,
-        ),
-    }
-
-    print("\n" + "=" * 70)
-    print(model_name)
-    print("=" * 70)
-
-    for metric, value in metrics.items():
-        if metric == "model":
-            continue
-
-        print(f"{metric:12s}: {value:.4f}")
-
-    print("\nConfusion Matrix:")
-    print(confusion_matrix(y, predictions))
-
-    return metrics
-
+# ---------------------------------------------------------------------
+# Model construction
+# ---------------------------------------------------------------------
 
 def build_logistic_pipeline(
-    numeric_columns,
-    categorical_columns,
-):
-    """Build preprocessing + Logistic Regression pipeline."""
+    numeric_columns: list[str],
+    categorical_columns: list[str],
+) -> Pipeline:
+    """
+    Build the Logistic Regression modeling pipeline.
+
+    Linear-model preprocessing includes:
+
+        Numeric:
+            - median imputation
+            - missing-value indicators
+            - standard scaling
+
+        Categorical:
+            - most-frequent imputation
+            - one-hot encoding
+
+    Parameters
+    ----------
+    numeric_columns:
+        Numeric predictor columns.
+
+    categorical_columns:
+        Categorical predictor columns.
+
+    Returns
+    -------
+    Pipeline
+        Complete preprocessing + Logistic Regression pipeline.
+    """
 
     preprocessor = build_preprocessor(
-        numeric_columns,
-        categorical_columns,
+        numeric_columns=numeric_columns,
+        categorical_columns=categorical_columns,
+        model_family="linear",
     )
 
     classifier = LogisticRegression(
         max_iter=1000,
-        random_state=42,
+        random_state=RANDOM_STATE,
     )
 
-    return Pipeline(
+    pipeline = Pipeline(
         steps=[
-            ("preprocessor", preprocessor),
-            ("classifier", classifier),
+            (
+                "preprocessor",
+                preprocessor,
+            ),
+            (
+                "classifier",
+                classifier,
+            ),
         ]
     )
 
+    return pipeline
 
-def run_baseline():
-    """Run baseline models using the temporal split."""
 
-    df = load_ml_dataset(INPUT_PATH)
+# ---------------------------------------------------------------------
+# Dummy baseline
+# ---------------------------------------------------------------------
 
-    train_df, validation_df, test_df = time_based_split(
-        df,
-        date_column="date",
+def build_dummy_baseline() -> DummyClassifier:
+    """
+    Build a simple prior-probability baseline.
+
+    The DummyClassifier predicts according to the class distribution
+    observed in the training data.
+
+    This provides a reference point for determining whether the
+    Logistic Regression model learns useful predictive structure.
+    """
+
+    return DummyClassifier(
+        strategy="prior"
     )
 
-    X_train, y_train = prepare_features_and_target(train_df)
-    X_validation, y_validation = prepare_features_and_target(
-        validation_df
-    )
-    X_test, y_test = prepare_features_and_target(test_df)
 
-    numeric_columns, categorical_columns = get_model_columns(
-        X_train
+# ---------------------------------------------------------------------
+# Reporting
+# ---------------------------------------------------------------------
+
+def print_dataset_summary(
+    train_df: pd.DataFrame,
+    validation_df: pd.DataFrame,
+) -> None:
+    """
+    Print the chronological train/validation dataset summary.
+    """
+
+    print()
+    print("=" * 70)
+    print("DATASET SUMMARY")
+    print("=" * 70)
+
+    print(
+        f"Training records   : "
+        f"{len(train_df):,}"
     )
 
+    print(
+        f"Validation records : "
+        f"{len(validation_df):,}"
+    )
+
+    print()
+
+    print(
+        f"Training date      : "
+        f"{train_df['date'].min().date()} "
+        f"→ "
+        f"{train_df['date'].max().date()}"
+    )
+
+    print(
+        f"Validation date    : "
+        f"{validation_df['date'].min().date()} "
+        f"→ "
+        f"{validation_df['date'].max().date()}"
+    )
+
+    print()
+
+    print(
+        f"Training target    : "
+        f"{train_df[TARGET_COLUMN].mean():.2%}"
+    )
+
+    print(
+        f"Validation target  : "
+        f"{validation_df[TARGET_COLUMN].mean():.2%}"
+    )
+
+
+def print_model_metrics(
+    model_name: str,
+    metrics: dict,
+) -> None:
+    """
+    Print model evaluation metrics in a consistent format.
+    """
+
+    print()
+    print("=" * 70)
+    print(model_name)
+    print("=" * 70)
+
+    print(
+        f"ROC-AUC     : "
+        f"{metrics['roc_auc']:.4f}"
+    )
+
+    print(
+        f"PR-AUC      : "
+        f"{metrics['pr_auc']:.4f}"
+    )
+
+    print(
+        f"Accuracy    : "
+        f"{metrics['accuracy']:.4f}"
+    )
+
+    print(
+        f"Precision   : "
+        f"{metrics['precision']:.4f}"
+    )
+
+    print(
+        f"Recall      : "
+        f"{metrics['recall']:.4f}"
+    )
+
+    print(
+        f"F1          : "
+        f"{metrics['f1']:.4f}"
+    )
+
+    print()
+    print("Confusion Matrix")
+    print("-" * 30)
+
+    print(
+        f"TN: {metrics['true_negative']:,}"
+    )
+
+    print(
+        f"FP: {metrics['false_positive']:,}"
+    )
+
+    print(
+        f"FN: {metrics['false_negative']:,}"
+    )
+
+    print(
+        f"TP: {metrics['true_positive']:,}"
+    )
+
+
+# ---------------------------------------------------------------------
+# Main baseline experiment
+# ---------------------------------------------------------------------
+
+def run_baseline(
+    input_path: Path = INPUT_PATH,
+) -> dict:
+    """
+    Run the baseline modeling experiment.
+
+    Workflow
+    --------
+    1. Load canonical ML dataset.
+    2. Create chronological train/validation/test split.
+    3. Use only train and validation for this experiment.
+    4. Build canonical feature/target matrices.
+    5. Build Logistic Regression preprocessing.
+    6. Train DummyClassifier.
+    7. Train Logistic Regression.
+    8. Evaluate both on validation data.
+    9. Return validation metrics.
+
+    The test set is intentionally not evaluated.
+    """
+
+    print()
     print("=" * 70)
     print("STEP 10.3 — BASELINE MODELING")
     print("=" * 70)
 
-    print(f"Training records   : {len(X_train):,}")
-    print(f"Validation records : {len(X_validation):,}")
-    print(f"Test records       : {len(X_test):,}")
+    # ---------------------------------------------------------------
+    # 1. Load canonical ML dataset
+    # ---------------------------------------------------------------
 
-    print(f"Numeric features   : {len(numeric_columns):,}")
-    print(f"Categorical        : {len(categorical_columns):,}")
+    df = load_ml_dataset(
+        input_path=input_path
+    )
 
-    print("\nTarget rates:")
+    if TARGET_COLUMN not in df.columns:
+        raise ValueError(
+            f"Required target column "
+            f"'{TARGET_COLUMN}' is missing."
+        )
+
+    # ---------------------------------------------------------------
+    # 2. Chronological split
+    # ---------------------------------------------------------------
+
+    (
+        train_df,
+        validation_df,
+        test_df,
+    ) = time_based_split(
+        df,
+        date_column="date",
+    )
+
+    # ---------------------------------------------------------------
+    # 3. Informational test-set check
+    #
+    # We verify that a test split exists, but deliberately do not
+    # evaluate it.
+    # ---------------------------------------------------------------
+
+    if test_df.empty:
+        raise ValueError(
+            "Test split is empty."
+        )
+
+    # ---------------------------------------------------------------
+    # 4. Print dataset summary
+    # ---------------------------------------------------------------
+
+    print_dataset_summary(
+        train_df,
+        validation_df,
+    )
+
+    print()
     print(
-        f"Train       : {y_train.mean() * 100:.2f}%"
+        f"Test records       : "
+        f"{len(test_df):,}"
     )
+
     print(
-        f"Validation  : {y_validation.mean() * 100:.2f}%"
-    )
-    print(
-        f"Test        : {y_test.mean() * 100:.2f}%"
-    )
-
-    # ------------------------------------------------------------
-    # Baseline 0 — Majority Class
-    # ------------------------------------------------------------
-
-    dummy = DummyClassifier(
-        strategy="prior"
+        f"Test date          : "
+        f"{test_df['date'].min().date()} "
+        f"→ "
+        f"{test_df['date'].max().date()}"
     )
 
-    dummy.fit(X_train, y_train)
+    # ---------------------------------------------------------------
+    # 5. Prepare features and target
+    # ---------------------------------------------------------------
 
-    dummy_validation = evaluate_model(
-        dummy,
-        X_validation,
-        y_validation,
-        "DummyClassifier",
+    X_train, y_train = (
+        prepare_features_and_target(
+            train_df
+        )
     )
 
-    # ------------------------------------------------------------
-    # Baseline 1 — Logistic Regression
-    # ------------------------------------------------------------
+    X_validation, y_validation = (
+        prepare_features_and_target(
+            validation_df
+        )
+    )
 
-    logistic_model = build_logistic_pipeline(
+    # ---------------------------------------------------------------
+    # 6. Determine feature types
+    #
+    # This is the canonical feature-column contract.
+    # ---------------------------------------------------------------
+
+    (
         numeric_columns,
         categorical_columns,
+    ) = get_model_columns(
+        X_train
+    )
+
+    print()
+    print("=" * 70)
+    print("FEATURE SUMMARY")
+    print("=" * 70)
+
+    print(
+        f"Numeric features   : "
+        f"{len(numeric_columns):,}"
+    )
+
+    print(
+        f"Categorical        : "
+        f"{len(categorical_columns):,}"
+    )
+
+    print(
+        f"Total predictors   : "
+        f"{len(numeric_columns) + len(categorical_columns):,}"
+    )
+
+    # ---------------------------------------------------------------
+    # 7. Dummy baseline
+    # ---------------------------------------------------------------
+
+    dummy_model = build_dummy_baseline()
+
+    dummy_model.fit(
+        X_train,
+        y_train,
+    )
+
+    dummy_metrics = evaluate_classifier(
+        dummy_model,
+        X_validation,
+        y_validation,
+        threshold=0.5,
+    )
+
+    print_model_metrics(
+        "DummyClassifier — Validation",
+        dummy_metrics,
+    )
+
+    # ---------------------------------------------------------------
+    # 8. Logistic Regression baseline
+    # ---------------------------------------------------------------
+
+    logistic_model = build_logistic_pipeline(
+        numeric_columns=numeric_columns,
+        categorical_columns=categorical_columns,
     )
 
     logistic_model.fit(
@@ -170,26 +437,48 @@ def run_baseline():
         y_train,
     )
 
-    logistic_validation = evaluate_model(
+    logistic_metrics = evaluate_classifier(
         logistic_model,
         X_validation,
         y_validation,
+        threshold=0.5,
+    )
+
+    print_model_metrics(
         "Logistic Regression — Validation",
+        logistic_metrics,
     )
 
-    logistic_test = evaluate_model(
-        logistic_model,
-        X_test,
-        y_test,
-        "Logistic Regression — Test",
-    )
+    # ---------------------------------------------------------------
+    # 9. Return experiment results
+    # ---------------------------------------------------------------
 
-    return {
-        "dummy_validation": dummy_validation,
-        "logistic_validation": logistic_validation,
-        "logistic_test": logistic_test,
+    results = {
+        "dummy_validation": dummy_metrics,
+        "logistic_validation": logistic_metrics,
+        "numeric_features": len(
+            numeric_columns
+        ),
+        "categorical_features": len(
+            categorical_columns
+        ),
+        "training_records": len(
+            train_df
+        ),
+        "validation_records": len(
+            validation_df
+        ),
+        "test_records": len(
+            test_df
+        ),
     }
 
+    return results
+
+
+# ---------------------------------------------------------------------
+# Script entry point
+# ---------------------------------------------------------------------
 
 if __name__ == "__main__":
     run_baseline()
