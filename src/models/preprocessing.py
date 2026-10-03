@@ -9,7 +9,10 @@ from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import OneHotEncoder, StandardScaler
 
 
-# Columns that are identifiers, outcomes, or leakage-sensitive fields.
+# ---------------------------------------------------------------------
+# Columns that must never enter a model
+# ---------------------------------------------------------------------
+
 EXCLUDED_MODEL_COLUMNS = {
     "project_id",
     "performance_id",
@@ -22,7 +25,15 @@ EXCLUDED_MODEL_COLUMNS = {
     "delay_next_30_days",
 }
 
-# Raw date columns are not directly suitable for Logistic Regression.
+
+# ---------------------------------------------------------------------
+# Raw date columns
+#
+# Dates are currently excluded from the model matrix.
+# If calendar features are required later, they should be engineered
+# explicitly rather than one-hot encoding raw dates.
+# ---------------------------------------------------------------------
+
 RAW_DATE_COLUMNS = {
     "date",
     "planned_start_date",
@@ -30,14 +41,15 @@ RAW_DATE_COLUMNS = {
     "actual_start_date",
 }
 
-TARGET_COLUMN = "delay_next_30_days"
 
-
-def get_model_columns(df: pd.DataFrame) -> Tuple[List[str], List[str]]:
+def get_model_columns(
+    df: pd.DataFrame,
+) -> Tuple[List[str], List[str]]:
     """
-    Identify numeric and categorical predictor columns.
+    Return numeric and categorical predictor columns.
 
-    Raw date columns and leakage-sensitive columns are excluded.
+    This function is the single source of truth for determining
+    which columns are eligible for model preprocessing.
     """
 
     excluded = EXCLUDED_MODEL_COLUMNS | RAW_DATE_COLUMNS
@@ -66,38 +78,47 @@ def get_model_columns(df: pd.DataFrame) -> Tuple[List[str], List[str]]:
 def build_preprocessor(
     numeric_columns: List[str],
     categorical_columns: List[str],
+    model_family: str = "linear",
 ) -> ColumnTransformer:
     """
-    Build the preprocessing pipeline.
+    Build the preprocessing pipeline for a model family.
 
-    Numeric:
-        median imputation + missing indicators + standardization
-
-    Categorical:
-        most-frequent imputation + one-hot encoding
+    model_family:
+        linear -> imputation + scaling + one-hot encoding
+        tree   -> imputation + one-hot encoding
     """
 
+    if model_family not in {"linear", "tree"}:
+        raise ValueError(
+            "model_family must be either 'linear' or 'tree'."
+        )
+
+    numeric_steps = [
+        (
+            "imputer",
+            SimpleImputer(
+                strategy="median",
+                add_indicator=True,
+            ),
+        )
+    ]
+
+    if model_family == "linear":
+        numeric_steps.append(
+            ("scaler", StandardScaler())
+        )
+
     numeric_pipeline = Pipeline(
-        steps=[
-            (
-                "imputer",
-                SimpleImputer(
-                    strategy="median",
-                    add_indicator=True,
-                ),
-            ),
-            (
-                "scaler",
-                StandardScaler(),
-            ),
-        ]
+        steps=numeric_steps
     )
 
     categorical_pipeline = Pipeline(
         steps=[
             (
                 "imputer",
-                SimpleImputer(strategy="most_frequent"),
+                SimpleImputer(
+                    strategy="most_frequent"
+                ),
             ),
             (
                 "onehot",
@@ -109,7 +130,7 @@ def build_preprocessor(
         ]
     )
 
-    preprocessor = ColumnTransformer(
+    return ColumnTransformer(
         transformers=[
             (
                 "numeric",
@@ -124,5 +145,3 @@ def build_preprocessor(
         ],
         remainder="drop",
     )
-
-    return preprocessor
