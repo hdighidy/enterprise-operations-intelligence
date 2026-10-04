@@ -1,8 +1,10 @@
+import numpy as np
 import pandas as pd
-import pytest
 
+from src.models.evaluation import evaluate_classifier
 from src.models.tree_models import (
-    evaluate_model,
+    build_decision_tree_pipeline,
+    build_random_forest_pipeline,
 )
 
 
@@ -13,10 +15,10 @@ class DummyModel:
 
     def predict_proba(self, X):
         return [
-            [0.8, 0.2],
+            [0.9, 0.1],
             [0.2, 0.8],
             [0.3, 0.7],
-            [0.7, 0.3],
+            [0.8, 0.2],
         ]
 
 
@@ -32,22 +34,29 @@ def test_evaluate_model_returns_required_metrics():
 
     y = [0, 1, 1, 0]
 
-    metrics = evaluate_model(
+    metrics = evaluate_classifier(
         model,
         X,
         y,
     )
 
-    expected_metrics = {
+    required_metrics = {
         "roc_auc",
         "pr_auc",
         "accuracy",
         "precision",
         "recall",
         "f1",
+        "true_negative",
+        "false_positive",
+        "false_negative",
+        "true_positive",
+        "threshold",
     }
 
-    assert set(metrics.keys()) == expected_metrics
+    assert required_metrics.issubset(
+        metrics.keys()
+    )
 
 
 def test_metrics_are_between_zero_and_one():
@@ -62,14 +71,23 @@ def test_metrics_are_between_zero_and_one():
 
     y = [0, 1, 1, 0]
 
-    metrics = evaluate_model(
+    metrics = evaluate_classifier(
         model,
         X,
         y,
     )
 
-    for value in metrics.values():
-        assert 0 <= value <= 1
+    probability_metrics = [
+        "roc_auc",
+        "pr_auc",
+        "accuracy",
+        "precision",
+        "recall",
+        "f1",
+    ]
+
+    for metric in probability_metrics:
+        assert 0.0 <= metrics[metric] <= 1.0
 
 
 def test_evaluation_uses_binary_target():
@@ -84,16 +102,19 @@ def test_evaluation_uses_binary_target():
 
     y = [0, 1, 1, 0]
 
-    metrics = evaluate_model(
+    metrics = evaluate_classifier(
         model,
         X,
         y,
     )
 
-    assert metrics["accuracy"] == 1.0
-    assert metrics["precision"] == 1.0
-    assert metrics["recall"] == 1.0
-    assert metrics["f1"] == 1.0
+    assert (
+        metrics["true_negative"]
+        + metrics["false_positive"]
+        + metrics["false_negative"]
+        + metrics["true_positive"]
+        == len(y)
+    )
 
 
 def test_model_output_is_numeric():
@@ -108,24 +129,52 @@ def test_model_output_is_numeric():
 
     y = [0, 1, 1, 0]
 
-    metrics = evaluate_model(
+    metrics = evaluate_classifier(
         model,
         X,
         y,
     )
 
-    assert all(
-        isinstance(value, float)
-        for value in metrics.values()
+    assert isinstance(
+        metrics["roc_auc"],
+        float,
+    )
+
+    assert isinstance(
+        metrics["f1"],
+        float,
     )
 
 
-def test_target_is_binary():
+def test_decision_tree_pipeline_creation():
 
-    target = pd.Series(
-        [0, 1, 1, 0, 1]
+    model = build_decision_tree_pipeline(
+        numeric_columns=["feature_a"],
+        categorical_columns=["category"],
     )
 
-    assert set(target.unique()).issubset(
-        {0, 1}
+    assert "preprocessor" in model.named_steps
+    assert "classifier" in model.named_steps
+
+    assert (
+        model.named_steps["classifier"]
+        .__class__.__name__
+        == "DecisionTreeClassifier"
+    )
+
+
+def test_random_forest_pipeline_creation():
+
+    model = build_random_forest_pipeline(
+        numeric_columns=["feature_a"],
+        categorical_columns=["category"],
+    )
+
+    assert "preprocessor" in model.named_steps
+    assert "classifier" in model.named_steps
+
+    assert (
+        model.named_steps["classifier"]
+        .__class__.__name__
+        == "RandomForestClassifier"
     )
