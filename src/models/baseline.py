@@ -4,23 +4,6 @@ Step 10.3 — Baseline Model
 Establish a reproducible Logistic Regression baseline for predicting
 whether a project will experience a delay within the next 30 days.
 
-Architecture:
-    ML Dataset
-        ↓
-    Time-Based Split
-        ↓
-    Feature / Target Contract
-        ↓
-    Linear Preprocessing
-        ↓
-    Logistic Regression
-        ↓
-    Validation Evaluation
-
-Important:
-    - The test set is intentionally NOT evaluated here.
-    - Model selection and threshold tuning must use validation data.
-    - The test set is reserved for final evaluation.
 """
 
 from __future__ import annotations
@@ -32,15 +15,9 @@ from sklearn.dummy import DummyClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.pipeline import Pipeline
 
-from src.models.dataset import (
-    load_ml_dataset,
-    prepare_features_and_target,
-)
+from src.models.dataset import (load_ml_dataset, prepare_features_and_target,)
 from src.models.evaluation import evaluate_classifier
-from src.models.preprocessing import (
-    build_preprocessor,
-    get_model_columns,
-)
+from src.models.preprocessing import (build_preprocessor, get_model_columns,)
 from src.models.split import time_based_split
 
 
