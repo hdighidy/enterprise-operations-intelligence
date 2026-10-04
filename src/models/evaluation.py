@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import numpy as np
 import pandas as pd
 
 from sklearn.metrics import (
@@ -20,18 +21,25 @@ def evaluate_classifier(
     threshold: float = 0.5,
 ) -> dict:
     """
-    Evaluate a binary classifier using predicted probabilities.
+    Evaluate a binary classification model.
 
-    The threshold is configurable so that threshold tuning can later
-    be performed on the validation set without changing the model.
+    The model must expose predict_proba().
     """
 
     if not 0.0 < threshold < 1.0:
+        raise ValueError("threshold must be between 0 and 1.")
+
+    probabilities = np.asarray(
+        model.predict_proba(X)
+    )
+
+    if probabilities.ndim != 2 or probabilities.shape[1] < 2:
         raise ValueError(
-            "threshold must be between 0 and 1."
+            "predict_proba() must return a 2-dimensional "
+            "array with at least two probability columns."
         )
 
-    probabilities = model.predict_proba(X)[:, 1]
+    probabilities = probabilities[:, 1]
 
     predictions = (
         probabilities >= threshold
@@ -71,9 +79,9 @@ def evaluate_classifier(
             predictions,
             zero_division=0,
         ),
-        "true_negative": tn,
-        "false_positive": fp,
-        "false_negative": fn,
-        "true_positive": tp,
+        "true_negative": int(tn),
+        "false_positive": int(fp),
+        "false_negative": int(fn),
+        "true_positive": int(tp),
         "threshold": threshold,
     }
