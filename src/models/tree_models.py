@@ -1,366 +1,298 @@
+from __future__ import annotations
+
 from pathlib import Path
 
 import pandas as pd
 
-from sklearn.compose import ColumnTransformer
-from sklearn.ensemble import (
-    GradientBoostingClassifier,
-    RandomForestClassifier,
-)
-from sklearn.impute import SimpleImputer
-from sklearn.metrics import (
-    accuracy_score,
-    average_precision_score,
-    f1_score,
-    precision_score,
-    recall_score,
-    roc_auc_score,
-)
+from sklearn.ensemble import RandomForestClassifier
 from sklearn.pipeline import Pipeline
-from sklearn.preprocessing import OneHotEncoder, StandardScaler
 from sklearn.tree import DecisionTreeClassifier
 
+from src.models.dataset import (
+    load_ml_dataset,
+    prepare_features_and_target,
+)
+from src.models.evaluation import evaluate_classifier
+from src.models.preprocessing import (
+    build_preprocessor,
+    get_model_columns,
+)
 from src.models.split import time_based_split
 
 
-DATA_PATH = Path("data/processed/ml_dataset.csv")
-
-OUTPUT_PATH = Path(
-    "data/processed/tree_model_validation_results.csv"
+INPUT_PATH = Path(
+    "data/processed/ml_dataset.csv"
 )
 
-TARGET_COLUMN = "delay_next_30_days"
+RANDOM_STATE = 42
 
 
-def evaluate_model(model, X, y):
-    """Evaluate a binary classification model."""
-
-    predictions = model.predict(X)
-    probabilities = model.predict_proba(X)[:, 1]
-
-    return {
-        "roc_auc": float(
-            roc_auc_score(y, probabilities)
-        ),
-        "pr_auc": float(
-            average_precision_score(y, probabilities)
-        ),
-        "accuracy": float(
-            accuracy_score(y, predictions)
-        ),
-        "precision": float(
-            precision_score(
-                y,
-                predictions,
-                zero_division=0,
-            )
-        ),
-        "recall": float(
-            recall_score(
-                y,
-                predictions,
-                zero_division=0,
-            )
-        ),
-        "f1": float(
-            f1_score(
-                y,
-                predictions,
-                zero_division=0,
-            )
-        ),
-    }
-
-
-def build_preprocessor(X):
-    """Build preprocessing pipeline for tree models."""
-
-    numeric_columns = X.select_dtypes(
-        include=["number"]
-    ).columns.tolist()
-
-    categorical_columns = X.select_dtypes(
-        include=["object", "category"]
-    ).columns.tolist()
-
-    numeric_pipeline = Pipeline(
-        steps=[
-            (
-                "imputer",
-                SimpleImputer(strategy="median"),
-            ),
-        ]
-    )
-
-    categorical_pipeline = Pipeline(
-        steps=[
-            (
-                "imputer",
-                SimpleImputer(strategy="most_frequent"),
-            ),
-            (
-                "onehot",
-                OneHotEncoder(
-                    handle_unknown="ignore",
-                    sparse_output=False,
-                ),
-            ),
-        ]
-    )
-
-    return ColumnTransformer(
-        transformers=[
-            (
-                "numeric",
-                numeric_pipeline,
-                numeric_columns,
-            ),
-            (
-                "categorical",
-                categorical_pipeline,
-                categorical_columns,
-            ),
-        ],
-        remainder="drop",
-    )
-
-
-def prepare_data(train_df, validation_df):
-    """Prepare train and validation matrices."""
-
-    X_train = train_df.drop(
-        columns=[TARGET_COLUMN]
-    )
-
-    y_train = train_df[TARGET_COLUMN].astype(int)
-
-    X_validation = validation_df.drop(
-        columns=[TARGET_COLUMN]
-    )
-
-    y_validation = validation_df[
-        TARGET_COLUMN
-    ].astype(int)
-
-    # Date is used for splitting, not as a
-    # predictive model feature.
-    for dataframe in (
-        X_train,
-        X_validation,
-    ):
-        for column in [
-            "date",
-            "performance_id",
-        ]:
-            if column in dataframe.columns:
-                dataframe.drop(
-                    columns=[column],
-                    inplace=True,
-                )
+def build_decision_tree_pipeline(
+    numeric_columns: list[str],
+    categorical_columns: list[str],
+) -> Pipeline:
+    """
+    Build a Decision Tree classification pipeline.
+    """
 
     preprocessor = build_preprocessor(
-        X_train
+        numeric_columns=numeric_columns,
+        categorical_columns=categorical_columns,
+        model_family="tree",
     )
 
-    X_train_transformed = (
-        preprocessor.fit_transform(
-            X_train
-        )
+    classifier = DecisionTreeClassifier(
+        random_state=RANDOM_STATE,
+        max_depth=6,
+        min_samples_leaf=20,
     )
 
-    X_validation_transformed = (
-        preprocessor.transform(
-            X_validation
-        )
-    )
-
-    return (
-        X_train_transformed,
-        y_train,
-        X_validation_transformed,
-        y_validation,
+    return Pipeline(
+        steps=[
+            ("preprocessor", preprocessor),
+            ("classifier", classifier),
+        ]
     )
 
 
-def main():
+def build_random_forest_pipeline(
+    numeric_columns: list[str],
+    categorical_columns: list[str],
+) -> Pipeline:
+    """
+    Build a Random Forest classification pipeline.
+    """
 
+    preprocessor = build_preprocessor(
+        numeric_columns=numeric_columns,
+        categorical_columns=categorical_columns,
+        model_family="tree",
+    )
+
+    classifier = RandomForestClassifier(
+        n_estimators=200,
+        max_depth=10,
+        min_samples_leaf=10,
+        random_state=RANDOM_STATE,
+        n_jobs=-1,
+    )
+
+    return Pipeline(
+        steps=[
+            ("preprocessor", preprocessor),
+            ("classifier", classifier),
+        ]
+    )
+
+
+def print_metrics(
+    model_name: str,
+    metrics: dict,
+) -> None:
+    """
+    Print model evaluation metrics.
+    """
+
+    print()
     print("=" * 70)
-    print("STEP 10.5 — TREE-BASED MODELING")
+    print(model_name)
     print("=" * 70)
 
-    if not DATA_PATH.exists():
-        raise FileNotFoundError(
-            f"ML dataset not found: {DATA_PATH}"
-        )
+    print(
+        f"ROC-AUC     : {metrics['roc_auc']:.4f}"
+    )
 
-    df = pd.read_csv(DATA_PATH)
+    print(
+        f"PR-AUC      : {metrics['pr_auc']:.4f}"
+    )
 
-    if TARGET_COLUMN not in df.columns:
-        raise ValueError(
-            f"Missing target column: {TARGET_COLUMN}"
-        )
+    print(
+        f"Accuracy    : {metrics['accuracy']:.4f}"
+    )
 
-    # ---------------------------------------------------------
-    # Time-based split
-    # ---------------------------------------------------------
+    print(
+        f"Precision   : {metrics['precision']:.4f}"
+    )
 
-    train_df, validation_df, test_df = (
-        time_based_split(
-            df,
-            date_column="date",
-            train_ratio=0.70,
-            validation_ratio=0.15,
-        )
+    print(
+        f"Recall      : {metrics['recall']:.4f}"
+    )
+
+    print(
+        f"F1          : {metrics['f1']:.4f}"
     )
 
     print()
-    print("TIME-BASED SPLIT")
-    print("-" * 70)
+    print("Confusion Matrix")
+    print(
+        f"TN: {metrics['true_negative']:,}"
+    )
+    print(
+        f"FP: {metrics['false_positive']:,}"
+    )
+    print(
+        f"FN: {metrics['false_negative']:,}"
+    )
+    print(
+        f"TP: {metrics['true_positive']:,}"
+    )
+
+
+def run_tree_models(
+    input_path: Path = INPUT_PATH,
+) -> dict:
+    """
+    Train and evaluate tree-based baseline models.
+
+    The test set remains locked and is not evaluated here.
+    """
+
+    df = load_ml_dataset(
+        input_path
+    )
+
+    (
+        train_df,
+        validation_df,
+        test_df,
+    ) = time_based_split(
+        df,
+        date_column="date",
+    )
+
+    if train_df.empty:
+        raise ValueError(
+            "Training dataset is empty."
+        )
+
+    if validation_df.empty:
+        raise ValueError(
+            "Validation dataset is empty."
+        )
+
+    if test_df.empty:
+        raise ValueError(
+            "Test dataset is empty."
+        )
+
+    X_train, y_train = (
+        prepare_features_and_target(
+            train_df
+        )
+    )
+
+    X_validation, y_validation = (
+        prepare_features_and_target(
+            validation_df
+        )
+    )
+
+    numeric_columns, categorical_columns = (
+        get_model_columns(X_train)
+    )
+
+    print("=" * 70)
+    print("STEP 10.5B — TREE MODELING")
+    print("=" * 70)
 
     print(
-        f"Train records      : {len(train_df):,}"
+        f"Training records   : {len(X_train):,}"
     )
+
     print(
-        f"Validation records : {len(validation_df):,}"
+        f"Validation records : {len(X_validation):,}"
     )
+
     print(
         f"Test records       : {len(test_df):,}"
     )
 
     print(
-        f"Train target       : "
-        f"{train_df[TARGET_COLUMN].mean():.2%}"
+        f"Numeric features   : {len(numeric_columns):,}"
     )
 
     print(
-        f"Validation target  : "
-        f"{validation_df[TARGET_COLUMN].mean():.2%}"
-    )
-
-    print(
-        f"Test target        : "
-        f"{test_df[TARGET_COLUMN].mean():.2%}"
-    )
-
-    # ---------------------------------------------------------
-    # Prepare data
-    # ---------------------------------------------------------
-
-    (
-        X_train,
-        y_train,
-        X_validation,
-        y_validation,
-    ) = prepare_data(
-        train_df,
-        validation_df,
+        f"Categorical        : {len(categorical_columns):,}"
     )
 
     print()
+    print("Target rates:")
+
     print(
-        f"Transformed features : "
-        f"{X_train.shape[1]}"
+        f"Train       : {y_train.mean() * 100:.2f}%"
+    )
+
+    print(
+        f"Validation  : {y_validation.mean() * 100:.2f}%"
+    )
+
+    print(
+        "\nTest set remains locked."
     )
 
     # ---------------------------------------------------------
-    # Models
+    # Decision Tree
     # ---------------------------------------------------------
 
-    models = {
-        "Decision Tree": DecisionTreeClassifier(
-            max_depth=8,
-            min_samples_leaf=20,
-            class_weight="balanced",
-            random_state=42,
-        ),
-        "Random Forest": RandomForestClassifier(
-            n_estimators=150,
-            max_depth=12,
-            min_samples_leaf=10,
-            class_weight="balanced",
-            random_state=42,
-            n_jobs=-1,
-        ),
-        "Gradient Boosting": GradientBoostingClassifier(
-            n_estimators=100,
-            learning_rate=0.05,
-            max_depth=3,
-            min_samples_leaf=20,
-            random_state=42,
-        ),
-    }
-
-    results = []
-
-    # ---------------------------------------------------------
-    # Train / validation
-    # ---------------------------------------------------------
-
-    for model_name, model in models.items():
-
-        print()
-        print("=" * 70)
-        print(model_name)
-        print("=" * 70)
-
-        model.fit(
-            X_train,
-            y_train,
+    decision_tree = (
+        build_decision_tree_pipeline(
+            numeric_columns,
+            categorical_columns,
         )
+    )
 
-        metrics = evaluate_model(
-            model,
+    decision_tree.fit(
+        X_train,
+        y_train,
+    )
+
+    decision_tree_metrics = (
+        evaluate_classifier(
+            decision_tree,
             X_validation,
             y_validation,
         )
+    )
 
-        results.append(
-            {
-                "model": model_name,
-                **metrics,
-            }
-        )
-
-        for metric, value in metrics.items():
-            print(
-                f"{metric:<12}: "
-                f"{value:.4f}"
-            )
+    print_metrics(
+        "Decision Tree — Validation",
+        decision_tree_metrics,
+    )
 
     # ---------------------------------------------------------
-    # Save validation results
+    # Random Forest
     # ---------------------------------------------------------
 
-    results_df = pd.DataFrame(
-        results
-    )
-
-    OUTPUT_PATH.parent.mkdir(
-        parents=True,
-        exist_ok=True,
-    )
-
-    results_df.to_csv(
-        OUTPUT_PATH,
-        index=False,
-    )
-
-    print()
-    print("=" * 70)
-    print("MODEL COMPARISON")
-    print("=" * 70)
-
-    print(
-        results_df.to_string(
-            index=False
+    random_forest = (
+        build_random_forest_pipeline(
+            numeric_columns,
+            categorical_columns,
         )
     )
 
-    print()
-    print(
-        f"Output: {OUTPUT_PATH}"
+    random_forest.fit(
+        X_train,
+        y_train,
     )
+
+    random_forest_metrics = (
+        evaluate_classifier(
+            random_forest,
+            X_validation,
+            y_validation,
+        )
+    )
+
+    print_metrics(
+        "Random Forest — Validation",
+        random_forest_metrics,
+    )
+
+    return {
+        "decision_tree": decision_tree_metrics,
+        "random_forest": random_forest_metrics,
+    }
 
 
 if __name__ == "__main__":
-    main()
+    run_tree_models()
